@@ -154,6 +154,7 @@ function update() {
 				Squarely.h += 1;
 				Squarely.w += 1;
 				if (Squarely.y < Blocks[i].y) Squarely.y -= 1; /* KLUDGE: Prevent Squarley from passing through blue block if he collides with top */
+				if (Squarely.x < Blocks[i].x) Squarely.x -= 1; /* KLUDGE: Prevent Squarely from passing through blue blocks on the left */
 				// limit maximum size!
 				if (Squarely.h > Squarely.MAXH) { Squarely.h = Squarely.MAXH; }
 				if (Squarely.w > Squarely.MAXW) { Squarely.w = Squarely.MAXW; } 
