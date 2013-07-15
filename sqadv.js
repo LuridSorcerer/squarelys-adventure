@@ -118,6 +118,14 @@ function init() {
 	// create a yellow block that will shirnk Squarely
 	b = {x:300,y:100,h:8,w:8,color:{r:255,g:255,b:0}};
 	Blocks.push(b);
+
+	// prevent arrow keys from scrolling window
+	window.addEventListener("keydown", function(e) {
+		// space and arrow keys
+		if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+			e.preventDefault();
+		}
+	}, false);
 	
 }
 
