@@ -262,6 +262,12 @@ $app_name = idx($app_info, 'name', '');
 		<script type="text/javascript" src="sqadv.js"></script>
 	</section>
 	
+	<section id="instructions">
+	<p>Squarely is a mild-mannered square, with a red pulse of life. He needs help doing... some currently-undefined objective. Please, help guide him in his quest (or whatever)!</p>
+	<p>Controlling Squarely is a simple matter of pressing the arrow keys in the direction you would like him to go. Alternatively, you could press the W,A,S, and D keys.</p>
+	<p>In addition to being able to move around, Squarely can also change size. When he presses up against a blue block, he grows. When he presses against a yellow one, he shrinks. The larger he is, the faster he can move. Being smaller allows our brave hero to navigate smaller hallways.</p>
+	</section>
+	
     <?php
       if ($user_id) {
     ?>
