@@ -71,6 +71,7 @@ var Ctrls = {
 	onKeyUp: function(event) {
 		this._pressed[event.keyCode] = 0;
 	}
+	
 };
 
 // array of blocks (terrain)
@@ -126,6 +127,9 @@ function init() {
 			e.preventDefault();
 		} 
 	}, false);
+	
+	// assume buttons are up when the window loses focus
+	window.addEventListener('blur',function(){Ctrls.init();},false);
 	
 }
 
