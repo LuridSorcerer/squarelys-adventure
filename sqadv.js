@@ -26,6 +26,16 @@ var Squarely = {
 	MINW:  8,
 	DEFAULTCOLOR: {r:64,g:64,b:64},
 	speed: 2,
+	update: function() {
+		// update Squarely's speed
+		Squarely.speed = (Squarely.h + Squarely.w) / 16
+		// change color
+		Squarely.color.r += redfactor;
+		Squarely.color.g = Squarely.DEFAULTCOLOR.g; Squarely.color.b = Squarely.DEFAULTCOLOR.b;
+		if (Squarely.color.r < 1) {redfactor *= -1; Squarely.color.r=0; }
+		if (Squarely.color.r > 255) { redfactor *= -1; Squarely.color.r=255;}
+		
+	}
 };
 
 // adjusts how quickly Squarely's color changes
@@ -78,7 +88,7 @@ var Ctrls = {
 var Blocks = new Array();
 
 // array of Npcs, characters not controlled by the player
-Npcs: {};
+var Npcs = new Array();
 
 // init: initializes the game
 function init() {
@@ -130,14 +140,32 @@ function init() {
 	
 	// assume buttons are up when the window loses focus
 	window.addEventListener('blur',function(){Ctrls.init();},false);
-	
+
+	// let's make an NPC!
+	var n = { x:600,y:300,w:16,h:16,color:{r:32,g:32,b:255}, bluefactor: 2,
+		update: function() {
+			this.color.b -= this.bluefactor;
+			if (this.color.b < 0) {
+				this.color.b = 0;
+				this.bluefactor *= -1;
+			} if (this.color.b > 255) {
+				this.color.b = 255;
+				this.bluefactor *= -1;
+			}
+		},
+		message1: "I'm a test NPC.",
+		message2: "I don't have much to say."
+	}
+	Npcs.push(n);
+			
 }
 
 // update: updates the game's state
 function update() {
-	
-	// update Squarely's speed
-	Squarely.speed = (Squarely.h + Squarely.w) / 16
+
+	// update Squarely
+	// (speed, color, etc.)
+	Squarely.update();
 	
 	// check buttons
 	if (Ctrls.isDown(Ctrls.UP) != 0 || Ctrls.isDown(Ctrls.KEY_W) != 0) 
@@ -148,12 +176,6 @@ function update() {
 		{ Squarely.x -= Squarely.speed; }
 	if (Ctrls.isDown(Ctrls.RIGHT) != 0 || Ctrls.isDown (Ctrls.KEY_D) != 0) 
 		{ Squarely.x += Squarely.speed; }
-	
-	// change color
-	Squarely.color.r += redfactor;
-	Squarely.color.g = Squarely.DEFAULTCOLOR.g; Squarely.color.b = Squarely.DEFAULTCOLOR.b;
-	if (Squarely.color.r < 1) {redfactor *= -1; Squarely.color.r=0; }
-	if (Squarely.color.r > 255) { redfactor *= -1; Squarely.color.r=255;}
 	
 	// check collisions with blocks
 	Squarely.color.g = 64;
@@ -186,11 +208,18 @@ function update() {
 		}
 	}
 	
+	// update NPCs
+	for (i=0; i<Npcs.length; ++i) {
+		if (camCollision(camOffset,Npcs[i]) ) {
+			Npcs[i].update();
+		}
+	}
+	
+	// check collision with NPCs
+	
 	// move camera
 	camOffset.x = (_canvas.width/2)-(Squarely.w/2)-Squarely.x;
 	camOffset.y = (_canvas.height/2)-(Squarely.h/2)-Squarely.y;
-	
-
 	
 }
 
@@ -212,14 +241,48 @@ function render() {
 	}
 	
 	// draw NPCs
+	for (i=0; i<Npcs.length; ++i) {
+		if (camCollision(camOffset,Npcs[i]) ) {
+			drawObject(Npcs[i]);
+		}
+	}
+	
 	
 	// draw Squarely
 	drawObject(Squarely);
+	
+	// DEBUG: draw message box
+	//drawMessage(Npcs[0]);
+	
+	// write message of whatever NPC is being collided with
+	for (i=0; i<Npcs.length; ++i) {
+		if(boxCollision(Squarely,Npcs[i])){
+			drawMessage(Npcs[i]);
+			break;
+		}
+	}
+	
 }
 
 function drawObject(obj) {
 	_canvasContext.fillStyle = "rgb("+obj.color.r+","+obj.color.g+","+obj.color.b+")";
 	_canvasContext.fillRect(obj.x+camOffset.x,obj.y+camOffset.y,obj.w,obj.h);
+}
+
+function drawMessage(obj) {
+
+	// create a text box
+	_canvasContext.fillStyle = "rgb(0,0,0)";
+	_canvasContext.fillRect(0,_canvas.height-100,_canvas.width,100);
+	_canvasContext.fillStyle = "rgb(255,255,255)";
+	_canvasContext.fillRect(10,_canvas.height-90,_canvas.width-20,80);
+
+	// write message
+	_canvasContext.fillStyle = "rgb(0,0,0)";
+	_canvasContext.font = "bold 24px monospace";
+	_canvasContext.fillText(obj.message1,20,_canvas.height-60);
+	_canvasContext.fillText(obj.message2,20,_canvas.height-20);
+	
 }
 
 function boxCollision(obja,objb) {
@@ -250,7 +313,6 @@ function camCollision(cam,objb) {
 	cam.y *= -1;
 	return true;
 }
-
 
 function blockCollision(mover,block) {
 	if(block.w !== Infinity && mover.w !== Infinity) {
