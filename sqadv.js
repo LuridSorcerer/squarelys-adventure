@@ -96,7 +96,7 @@ function init() {
 	Ctrls.init();
 	
 	// create a block or two-dozen
-	var b = {x:10,y:10,h:300,w:25,color:{r:0,g:0,b:0}};
+	var b = {x:0,y:10,h:300,w:25,color:{r:0,g:0,b:0}};
 	Blocks.push(b);
 	b = {x:400,y:350,h:200,w:200,color:{r:0,g:0,b:0}};
 	Blocks.push(b);
