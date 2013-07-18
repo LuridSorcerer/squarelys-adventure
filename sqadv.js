@@ -24,23 +24,15 @@ var Squarely = {
 	MAXW: 32,
 	MINH:  8,
 	MINW:  8,
-	DEFAULTCOLOR: {r:64,g:64,b:64},
+	COLORCHANGE:  {r:5, g:0, b:0 },
 	speed: 2,
 	update: function() {
 		// update Squarely's speed
-		Squarely.speed = (Squarely.h + Squarely.w) / 16
+		Squarely.speed = (Squarely.h + Squarely.w) / 16;
 		// change color
-		Squarely.color.r += redfactor;
-		Squarely.color.g = Squarely.DEFAULTCOLOR.g; Squarely.color.b = Squarely.DEFAULTCOLOR.b;
-		if (Squarely.color.r < 1) {redfactor *= -1; Squarely.color.r=0; }
-		if (Squarely.color.r > 255) { redfactor *= -1; Squarely.color.r=255;}
-		
+		changeColor(this);
 	}
 };
-
-// adjusts how quickly Squarely's color changes
-var redfactor = 5;
-
 
 // Ctrls, handles game input
 var Ctrls = {
@@ -75,7 +67,6 @@ var Ctrls = {
 		if (this.isDown(event.keyCode) == 0) {
 			this._pressed[event.keyCode] = new Date().getTime();
 		}
-		//document.getElementById("info").value = event.keyCode;
 	},
 	
 	onKeyUp: function(event) {
@@ -122,12 +113,16 @@ function init() {
 	b = {x:1000,y:-1000,h:2000,w:20,color:{r:0,g:0,b:0}};
 	Blocks.push(b);
 	
-	// create blue block that will grow Squarely
-	b = {x:100,y:100,h:32,w:32,color:{r:0,g:0,b:255}};
+	// create block that will grow Squarely
+	b = {x:100,y:180,h:64,w:64,color:{r:0,g:255,b:0}};
 	Blocks.push(b);
 	
-	// create a yellow block that will shirnk Squarely
-	b = {x:300,y:100,h:8,w:8,color:{r:255,g:255,b:0}};
+	// create block that changes Squarely to normal size
+	b = {x:200,y:80,h:16,w:16,color:{r:0,g:255,b:0}};
+	Blocks.push(b);
+	
+	// create a block that will shrink Squarely
+	b = {x:300,y:80,h:8,w:64,color:{r:0,g:255,b:0}};
 	Blocks.push(b);
 
 	// prevent arrow keys from scrolling window
@@ -142,16 +137,10 @@ function init() {
 	window.addEventListener('blur',function(){Ctrls.init();},false);
 
 	// let's make an NPC!
-	var n = { x:600,y:300,w:16,h:16,color:{r:32,g:32,b:255}, bluefactor: 2,
+	var n = { x:600,y:300,w:16,h:16,color:{r:64,g:64,b:255}, bluefactor: 2,
+		COLORCHANGE: {r:0,g:0,b:4},
 		update: function() {
-			this.color.b -= this.bluefactor;
-			if (this.color.b < 0) {
-				this.color.b = 0;
-				this.bluefactor *= -1;
-			} if (this.color.b > 255) {
-				this.color.b = 255;
-				this.bluefactor *= -1;
-			}
+			changeColor(this);
 		},
 		message1: "I'm a test NPC.",
 		message2: "I don't have much to say."
@@ -181,29 +170,10 @@ function update() {
 	Squarely.color.g = 64;
 	for (i = 0; i < Blocks.length; i++) {
 		if (blockCollision(Squarely,Blocks[i])) {
-			// on collision, crank up the green and...
-			//Squarely.color.g = 255;
-			// if touching a blue block, grow
-			if (Blocks[i].color.b == 255) {
-				Squarely.h += 1;
-				Squarely.w += 1;
-				if (Squarely.y < Blocks[i].y) Squarely.y -= 1; /* KLUDGE: Prevent Squarley from passing through blue block if he collides with top */
-				if (Squarely.x < Blocks[i].x) Squarely.x -= 1; /* KLUDGE: Prevent Squarely from passing through blue blocks on the left */
-				// limit maximum size!
-				if (Squarely.h > Squarely.MAXH) { Squarely.h = Squarely.MAXH; }
-				if (Squarely.w > Squarely.MAXW) { Squarely.w = Squarely.MAXW; } 
-				// change color while growing
-				Squarely.color = {r:32,g:32,b:128};
-			}
-			//if touching a yellow block, shrink
-			if (Blocks[i].color.r == 255 && Blocks[i].color.g == 255 && Blocks[i].color.b == 0) {
-				Squarely.h -= 1;
-				Squarely.w -= 1;
-				// limit minimum size!
-				if (Squarely.h < Squarely.MINH) { Squarely.h = Squarely.MINH; }
-				if (Squarely.w < Squarely.MINW) { Squarely.w = Squarely.MINW; }
-				// change color while shrinking
-				Squarely.color = {r:128,g:128,b:32};
+			// if touching a green block
+			if (Blocks[i].color.g==255 && Blocks[i].color.r==0 && Blocks[i].color.b==0) {
+				// change size
+				changeSize(Squarely,Blocks[i]);
 			}
 		}
 	}
@@ -231,13 +201,11 @@ function render() {
 	_canvasContext.fillRect(0,0,_canvas.width,_canvas.height);
 
 	// draw blocks
-	//rblocks=0;
 	for (i=0; i<Blocks.length; ++i) {
 		if (camCollision(camOffset,Blocks[i]) ) {
 			//rblocks+=1;
 			drawObject(Blocks[i]);
 		}
-		//document.getElementById("info").value = rblocks;
 	}
 	
 	// draw NPCs
@@ -247,12 +215,8 @@ function render() {
 		}
 	}
 	
-	
 	// draw Squarely
 	drawObject(Squarely);
-	
-	// DEBUG: draw message box
-	//drawMessage(Npcs[0]);
 	
 	// write message of whatever NPC is being collided with
 	for (i=0; i<Npcs.length; ++i) {
@@ -344,6 +308,47 @@ function blockCollision(mover,block) {
 	}
 	
 	return true;
+}
+
+function changeColor(obj) {
+
+	// change red
+	obj.color.r += obj.COLORCHANGE.r;
+	if (obj.color.r < 1) {obj.COLORCHANGE.r *= -1; obj.color.r=0; }
+	if (obj.color.r > 255) { obj.COLORCHANGE.r *= -1; obj.color.r=255;}
+	
+	// change green
+	obj.color.g += obj.COLORCHANGE.g;
+	if (obj.color.g < 1) {obj.COLORCHANGE.g *= -1; obj.color.g=0; }
+	if (obj.color.g > 255) { obj.COLORCHANGE.g *= -1; obj.color.g=255;}
+	
+	// change blue
+	obj.color.b += obj.COLORCHANGE.b;
+	if (obj.color.b < 1) {obj.COLORCHANGE.b *= -1; obj.color.b=0; }
+	if (obj.color.b > 255) { obj.COLORCHANGE.b *= -1; obj.color.b=255;}
+	
+}
+
+function changeSize(Squarely,block) {
+	
+	// change Squarely's height closer to the block's height
+	if (block.h > Squarely.h) {
+		Squarely.h += 1;
+		/* KLUDGE: Prevent him from passing through blocks while growing */
+		if (Squarely.y < block.y) { Squarely.y--; }
+	} else if (block.h < Squarely.h) {
+		Squarely.h -= 1;
+	} 
+	
+	// change Squarely's width closer to the block's width
+	if (block.w > Squarely.w) {
+		Squarely.w += 1;
+		/* KLUDGE: Prevent him from passing through blocks */
+		if (Squarely.x < block.x) { Squarely.x--; }
+	} else if (block.w < Squarely.w) {
+		Squarely.w -= 1;
+	}
+	
 }
 
 // gameLoop: performs the game loop
