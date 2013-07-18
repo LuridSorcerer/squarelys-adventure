@@ -96,7 +96,7 @@ function init() {
 	Ctrls.init();
 	
 	// create a block or two-dozen
-	var b = {x:0,y:10,h:300,w:25,color:{r:0,g:0,b:0}};
+	var b = {x:20,y:10,h:300,w:25,color:{r:0,g:0,b:0}};
 	Blocks.push(b);
 	b = {x:400,y:350,h:200,w:200,color:{r:0,g:0,b:0}};
 	Blocks.push(b);
@@ -178,7 +178,6 @@ function update() {
 		{ Squarely.x += Squarely.speed; }
 	
 	// check collisions with blocks
-	Squarely.color.g = 64;
 	for (i = 0; i < Blocks.length; i++) {
 		if (blockCollision(Squarely,Blocks[i])) {
 			// if touching a green block
@@ -214,7 +213,6 @@ function render() {
 	// draw blocks
 	for (i=0; i<Blocks.length; ++i) {
 		if (camCollision(camOffset,Blocks[i]) ) {
-			//rblocks+=1;
 			drawObject(Blocks[i]);
 		}
 	}
@@ -347,6 +345,13 @@ function changeSize(Squarely,block) {
 		Squarely.h += 1;
 		/* KLUDGE: Prevent him from passing through blocks while growing */
 		if (Squarely.y < block.y) { Squarely.y--; }
+		// don't let Squarely grow through blocks
+		// check collisions with blocks
+		for (i = 0; i < Blocks.length; i++) {
+			if (blockCollision(Squarely,Blocks[i])) {
+				Squarely.h -= 1;
+			}
+		}
 	} else if (block.h < Squarely.h) {
 		Squarely.h -= 1;
 	} 
@@ -356,6 +361,13 @@ function changeSize(Squarely,block) {
 		Squarely.w += 1;
 		/* KLUDGE: Prevent him from passing through blocks */
 		if (Squarely.x < block.x) { Squarely.x--; }
+		// don't let Squarely grow through blocks
+		// check collisions with blocks
+		for (i = 0; i < Blocks.length; i++) {
+			if (blockCollision(Squarely,Blocks[i])) {
+				Squarely.w -= 1;
+			}
+		}
 	} else if (block.w < Squarely.w) {
 		Squarely.w -= 1;
 	}
