@@ -137,7 +137,7 @@ function init() {
 	window.addEventListener('blur',function(){Ctrls.init();},false);
 
 	// let's make an NPC!
-	var n = { x:600,y:300,w:16,h:16,color:{r:64,g:64,b:255}, bluefactor: 2,
+	var n = { x:600,y:300,w:16,h:16,color:{r:64,g:64,b:255}, 
 		COLORCHANGE: {r:0,g:0,b:4},
 		update: function() {
 			changeColor(this);
@@ -146,7 +146,18 @@ function init() {
 		message2: "I don't have much to say."
 	}
 	Npcs.push(n);
-			
+	
+	// make another NPC for some reason
+	n = { x:500,y:250,w:16,h:16,color:{r:64,g:64,b:64},
+		COLORCHANGE: {r:0,g:3,b:7},
+		update: function() {
+			changeColor(this);
+		},
+		message1: "I am Error.",
+		message2: "",
+	}
+	Npcs.push(n);
+	
 }
 
 // update: updates the game's state
