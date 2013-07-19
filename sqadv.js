@@ -48,6 +48,8 @@ var Ctrls = {
 	KEY_S:	83,
 	KEY_D:	68,
 	
+	KEY_RETURN: 13,
+	
 	init: function() {
 		this._pressed[this.UP] = 0;
 		this._pressed[this.DOWN] = 0;
@@ -57,6 +59,7 @@ var Ctrls = {
 		this._pressed[this.KEY_A] = 0;
 		this._pressed[this.KEY_S] = 0;
 		this._pressed[this.KEY_D] = 0;
+		this._pressed[this.KEY_RETURN] = 0;
 	},
 	
 	isDown: function(keyCode) {
@@ -71,7 +74,9 @@ var Ctrls = {
 	
 	onKeyUp: function(event) {
 		this._pressed[event.keyCode] = 0;
-	}
+	},
+	
+	canRotate: true
 	
 };
 
@@ -200,6 +205,14 @@ function update() {
 	// move camera
 	camOffset.x = (_canvas.width/2)-(Squarely.w/2)-Squarely.x;
 	camOffset.y = (_canvas.height/2)-(Squarely.h/2)-Squarely.y;
+	
+	// rotate
+	if (Ctrls.isDown(Ctrls.KEY_RETURN) && Squarely.canRotate) {
+		rotate(Squarely);
+		Squarely.canRotate = false;
+	} else if (!Ctrls.isDown(Ctrls.KEY_RETURN)) {
+		Squarely.canRotate = true;
+	}
 	
 }
 
@@ -370,6 +383,41 @@ function changeSize(Squarely,block) {
 		}
 	} else if (block.w < Squarely.w) {
 		Squarely.w -= 1;
+	}
+	
+}
+
+// rotate Squarley if possible
+function rotate(obj) {
+
+	// find the x and y adjustments (to make him remain centered)
+	xadj = (obj.h - obj.w) / 2;
+	yadj = (obj.w - obj.h) / 2;
+
+	// swap height and width
+	temp = obj.h;
+	obj.h = obj.w;
+	obj.w = temp;
+
+	// BUG: These adjustments let 
+	// adjust x and y (keep him centered)
+	//obj.x = obj.x - xadj;
+	//obj.y = obj.y - yadj;
+	
+	// if it'll push him into a block, switch back
+	for (i = 0; i < Blocks.length; i++) {
+		if (blockCollision(obj,Blocks[i])) {
+
+			// undo the x and y adjustments
+			//obj.x = obj.x + xadj;
+			//obj.y = obj.y + yadj;
+		
+			// undo the rotation
+			temp = obj.h;
+			obj.h = obj.w;
+			obj.w = temp;
+			break;
+		}
 	}
 	
 }
