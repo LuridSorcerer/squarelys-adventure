@@ -36,8 +36,14 @@ var Squarely = {
 
 // Ctrls, handles game input
 var Ctrls = {
+	
+	// mouse control parameters
+	mouseX: 0,
+	mouseY: 0,
+
 	_pressed: {},
 	
+	MOUSE:  0,
 	LEFT:  37,
 	UP:    38,
 	RIGHT: 39,
@@ -51,6 +57,7 @@ var Ctrls = {
 	KEY_RETURN: 13,
 	
 	init: function() {
+		this._pressed[this.MOUSE] = 0;
 		this._pressed[this.UP] = 0;
 		this._pressed[this.DOWN] = 0;
 		this._pressed[this.LEFT] = 0;
@@ -66,6 +73,14 @@ var Ctrls = {
 		return this._pressed[keyCode];
 	},
 	
+	getMouseX: function() {
+		return this.mouseX;
+	},
+	
+	getMouseY: function() {
+		return this.mouseY;
+	},
+	
 	onKeyDown: function(event) {
 		if (this.isDown(event.keyCode) == 0) {
 			this._pressed[event.keyCode] = new Date().getTime();
@@ -74,6 +89,35 @@ var Ctrls = {
 	
 	onKeyUp: function(event) {
 		this._pressed[event.keyCode] = 0;
+	},
+	
+	onMouseDown: function(event){
+		this._pressed[this.MOUSE] = new Date().getTime();
+		
+		// if mouse is in center, rotate him
+		if (this.mouseX < (_canvas.width * 3/5) && this.mouseX > (_canvas.width * 2/5) )
+		if (this.mouseY < (_canvas.height * 3/5) && this.mouseY > (_canvas.height * 2/5) )
+			rotate(Squarely);
+	},
+	
+	onMouseUp: function(event){
+		this._pressed[this.MOUSE] = 0;
+	},
+
+	onMouseMove: function(event){
+		this.mouseX = event.layerX;
+		this.mouseY = event.layerY;
+	},
+	
+	// if the mouse leaves the canvas, consider the mouse button released
+	onMouseOut: function(event) {
+		this._pressed[this.MOUSE] = 0;
+	},
+	
+	// if mouse enters canvas with button pressed, treat it like button was just pressed
+	onMouseOver: function(event) {
+		if (event.buttons === 1)
+			this._pressed[this.MOUSE] = new Date().getTime();
 	},
 	
 	canRotate: true
@@ -96,6 +140,11 @@ function init() {
 	// add listeners for keyboard input
 	window.addEventListener('keyup',function(event) {Ctrls.onKeyUp(event); }, false);
 	window.addEventListener('keydown',function(event) {Ctrls.onKeyDown(event); }, false);
+	_canvas.addEventListener('mousedown',function(event) {Ctrls.onMouseDown(event);},false);
+	_canvas.addEventListener('mouseup',function(event) {Ctrls.onMouseUp(event);},false);
+	_canvas.addEventListener('mousemove',function(event) {Ctrls.onMouseMove(event);},false);
+	_canvas.addEventListener('mouseout',function(event) {Ctrls.onMouseOut(event);},false);
+	_canvas.addEventListener('mouseover',function(event){Ctrls.onMouseOver(event);},false);
 	
 	// initialize controls
 	Ctrls.init();
@@ -171,6 +220,21 @@ function update() {
 	// update Squarely
 	// (speed, color, etc.)
 	Squarely.update();
+	
+	// check mouse controls
+	// TODO: Use distance function to create more precise movement
+	if (Ctrls.isDown(Ctrls.MOUSE)) {
+	
+		// Move squarely according to where the mouse is being moved
+		if (Ctrls.getMouseX() < (_canvas.width / 3) )
+			{ Squarely.x -= Squarely.speed; }
+		if (Ctrls.getMouseX() > ((_canvas.width / 3) * 2) ) 
+			{ Squarely.x += Squarely.speed; }
+		if (Ctrls.getMouseY() < (_canvas.height / 3) )
+			{ Squarely.y -= Squarely.speed; }
+		if (Ctrls.getMouseY() > ((_canvas.height / 3) * 2) )
+			{ Squarely.y += Squarely.speed; }
+	}
 	
 	// check buttons
 	if (Ctrls.isDown(Ctrls.UP) != 0 || Ctrls.isDown(Ctrls.KEY_W) != 0) 
