@@ -1,0 +1,22 @@
+This file explains how to do various things involving the development of Squrely's Adventure.
+
+Common functions
+----------------
+
+Committing Changes
+	$ git commit -am "comment"
+
+Pushing Commits
+	$ git push heroku master
+
+Pulling Latest Version
+	$ git pull
+
+
+Less Common Functions
+---------------------
+
+Add a file to the project
+	$ git add ./filename
+	$ git commit -am "New file: filename"
+	$ git push heroku master
