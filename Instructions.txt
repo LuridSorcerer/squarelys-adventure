@@ -20,3 +20,7 @@ Add a file to the project
 	$ git add ./filename
 	$ git commit -am "New file: filename"
 	$ git push heroku master
+
+Undo a commit
+	$ git reset --soft 'HEAD^' 
+	http://christoph.ruegg.name/blog/git-howto-revert-a-commit-already-pushed-to-a-remote-reposit.html
