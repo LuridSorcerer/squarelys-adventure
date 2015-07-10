@@ -1,3 +1,5 @@
+- Add keys and doors
+- Add multiple areas, ability to travel between them
 - Touch controls do not work at all
 - Game does not scale to screen size
 - Directions are present on screen
