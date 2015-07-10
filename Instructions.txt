@@ -1,4 +1,4 @@
-This file explains how to do various things involving the development of Squrely's Adventure.
+This file explains how to do various things involving the development of Squarely's Adventure.
 
 Common functions
 ----------------
@@ -11,6 +11,11 @@ Pushing Commits
 
 Pulling Latest Version
 	$ git pull
+	
+Connect a new git client
+	$ mkdir newdir
+	$ cd newdir
+	$ heroku git:clone -a appname
 
 
 Less Common Functions
