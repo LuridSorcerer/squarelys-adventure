@@ -1,0 +1,4 @@
+- Touch controls do not work at all
+- Game does not scale to screen size
+- Directions are present on screen
+- Screen scrolling needs to be prevented
