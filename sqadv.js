@@ -166,6 +166,45 @@ function init() {
 	b = {x:-500,y:-500,h:30,w:300,color:{r:20,g:20,b:20}};
 	Blocks.push(b);
 	
+	// create a little house thingy
+	b = {x:200,y:-300,h:16,w:100,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+	b = {x:200,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+	b = {x:300,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+	
+	// put a key in the house
+	n = { x:250,y:-250,w:16,h:16,color:{r:255,g:255,b:00}}
+	Keys.push(n);
+	
+	// make a door for testing stuff
+	n = { x:200+8,y:-200-16,w:100,h:16,color:{r:0,g:0,b:255}}
+	Doors.push(n);
+
+	// create another house thingy
+	b = {x:-200,y:-300,h:16,w:100,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+	b = {x:-200,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+	b = {x:-100,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+
+	// make another NPC for some reason
+	n = { x:-150,y:-250,w:16,h:16,color:{r:64,g:64,b:64},
+		COLORCHANGE: {r:0,g:3,b:7},
+		update: function() {
+			changeColor(this);
+		},
+		message1: "I am Error.",
+		message2: "",
+	}
+	Npcs.push(n);
+		
+	// make another door for testing stuff	
+	n = { x:-200+8,y:-200-16,w:100,h:16,color:{r:0,g:0,b:255}}
+	Doors.push(n);
+	
 	// create walls that can NEVER BE BREACHED
 	b = {x:-1000,y:-1000,h:20,w:2000,color:{r:0,g:0,b:0}};
 	Blocks.push(b);
@@ -210,30 +249,10 @@ function init() {
 	}
 	Npcs.push(n);
 	
-	// make another NPC for some reason
-	n = { x:500,y:250,w:16,h:16,color:{r:64,g:64,b:64},
-		COLORCHANGE: {r:0,g:3,b:7},
-		update: function() {
-			changeColor(this);
-		},
-		message1: "I am Error.",
-		message2: "",
-	}
-	Npcs.push(n);
-	
 	// make a key for testing stuff
 	n = { x:-50,y:-50,w:16,h:16,color:{r:255,g:255,b:00}}
 	Keys.push(n);
-	
-	// make a door for testing stuff
-	n = { x:100,y:0,w:16,h:100,color:{r:0,g:0,b:255}}
-	Doors.push(n);
-	
-	// make another door for testing stuff
-	n = { x:300,y:-100,w:16,h:100,color:{r:0,g:0,b:255}}
-	Doors.push(n);
-	
-	
+
 }
 
 // update: updates the game's state
