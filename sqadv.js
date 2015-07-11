@@ -133,6 +133,13 @@ var Npcs = new Array();
 // init: initializes the game
 function init() {
 
+	// resize the canvas to fill the window
+	_canvas.width = document.body.clientWidth;
+	_canvas.height = document.body.clientHeight;
+	canvasW = _canvas.width;
+	canvasH = _canvas.height;
+	camOffset.h = _canvas.height,
+	camOffset.w = _canvas.width
 
 
 	// place Squarely squarely in the center of the world
@@ -286,14 +293,6 @@ function update() {
 
 // render: draws all the crap onto the canvas
 function render() { 
-
-	// resize the canvas to fill the window
-	_canvas.width = document.body.clientWidth;
-	_canvas.height = document.body.clientHeight;
-	canvasW = _canvas.width;
-	canvasH = _canvas.height;
-	camOffset.h = _canvas.height,
-	camOffset.w = _canvas.width
 
 	// clear canvas
 	_canvasContext.fillStyle = "rgb(220,220,220)";
