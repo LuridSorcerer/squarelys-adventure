@@ -133,15 +133,6 @@ var Npcs = new Array();
 // init: initializes the game
 function init() {
 
-	// resize the canvas to fill the window
-	_canvas.width = document.body.clientWidth;
-	_canvas.height = document.body.clientHeight;
-	canvasW = _canvas.width;
-	canvasH = _canvas.height;
-	camOffset.h = _canvas.height,
-	camOffset.w = _canvas.width
-
-
 	// place Squarely squarely in the center of the world
 	//Squarely.x = (_canvas.width/2)-(Squarely.w/2);
 	//Squarely.y = (_canvas.height/2)-(Squarely.h/2);
@@ -227,6 +218,14 @@ function init() {
 
 // update: updates the game's state
 function update() {
+
+	// resize the canvas to fill the window
+	_canvas.width = document.body.clientWidth;
+	_canvas.height = document.body.clientHeight;
+	canvasW = _canvas.width;
+	canvasH = _canvas.height;
+	camOffset.h = _canvas.height,
+	camOffset.w = _canvas.width
 
 	// update Squarely
 	// (speed, color, etc.)
