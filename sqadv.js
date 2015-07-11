@@ -362,37 +362,46 @@ function render() {
 	_canvasContext.fillRect(0,0,_canvas.width,_canvas.height);
 	
 	// draw doors
+	// debug: count doors drawn
+	doorsDrawn = 0;
 	for (i=0; i<Doors.length; ++i){
 		if (camCollision(camOffset,Doors[i]) ) {
 			drawObject(Doors[i]);
+			doorsDrawn++;
 		}
 	}	
 	
 	// draw doors
-	for (i=0; i<Doors.length; ++i){
-		if (camCollision(camOffset,Doors[i]) ) {
-			drawObject(Doors[i]);
-		}
-	}
+	// for (i=0; i<Doors.length; ++i){
+		// if (camCollision(camOffset,Doors[i]) ) {
+			// drawObject(Doors[i]);
+		// }
+	// }
 	
 	// draw blocks
+	blocksDrawn = 0;
 	for (i=0; i<Blocks.length; ++i) {
 		if (camCollision(camOffset,Blocks[i]) ) {
 			drawObject(Blocks[i]);
+			blocksDrawn++;
 		}
 	}
 	
 	// draw NPCs
+	NpcsDrawn = 0;
 	for (i=0; i<Npcs.length; ++i) {
 		if (camCollision(camOffset,Npcs[i]) ) {
 			drawObject(Npcs[i]);
+			NpcsDrawn++;
 		}
 	}
 	
 	// draw Keys
+	KeysDrawn = 0;
 	for (i=0; i<Keys.length; ++i) {
 		if (camCollision(camOffset,Keys[i]) ) {
 			drawObject(Keys[i]);
+			KeysDrawn++;
 		}
 	}
 	
@@ -407,6 +416,15 @@ function render() {
 		}
 	}
 	
+	//Debug: Print stats
+	_canvasContext.fillStyle = "rgb(0,0,0)";
+	_canvasContext.font = "bold 14px monospace";
+	// objects rendered/in area
+	msg = "Blocks:"+blocksDrawn+"/"+Blocks.length+" NPCs:"+NpcsDrawn+"/"+Npcs.length+" Keys:"+KeysDrawn+"/"+Keys.length+" Doors:"+doorsDrawn+"/"+Doors.length;
+	_canvasContext.fillText(msg,10,20);	
+	// keys held
+	msg = "Keys on-hand:"+Squarely.keys;
+	_canvasContext.fillText(msg,10,40);	
 }
 
 function drawObject(obj) {
