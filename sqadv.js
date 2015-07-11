@@ -540,10 +540,6 @@ function rotate(obj) {
 	// if it'll push him into a block, switch back
 	for (i = 0; i < Blocks.length; i++) {
 		if (blockCollision(obj,Blocks[i])) {
-
-			// undo the x and y adjustments
-			//obj.x = obj.x + xadj;
-			//obj.y = obj.y + yadj;
 		
 			// undo the rotation
 			temp = obj.h;
@@ -552,6 +548,18 @@ function rotate(obj) {
 			break;
 		}
 	}
+	
+	// if it'll push him into a door, switch back
+	for (i = 0; i < Doors.length; i++) {
+		if (blockCollision(obj,Doors[i])) {
+		
+			// undo the rotation
+			temp = obj.h;
+			obj.h = obj.w;
+			obj.w = temp;
+			break;
+		}
+	}	
 	
 }
 
