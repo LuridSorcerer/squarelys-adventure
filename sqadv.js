@@ -26,6 +26,7 @@ var Squarely = {
 	MINW:  8,
 	COLORCHANGE:  {r:5, g:0, b:0 },
 	speed: 2,
+	keys: 0,
 	update: function() {
 		// update Squarely's speed
 		Squarely.speed = (Squarely.h + Squarely.w) / 16;
@@ -130,6 +131,12 @@ var Blocks = new Array();
 // array of Npcs, characters not controlled by the player
 var Npcs = new Array();
 
+// array of Keys, to be collected for unlocking doors
+var Keys = new Array();
+
+// array of Doors, to be opened by keys
+var Doors = new Array();
+
 // init: initializes the game
 function init() {
 
@@ -214,6 +221,19 @@ function init() {
 	}
 	Npcs.push(n);
 	
+	// make a key for testing stuff
+	n = { x:-50,y:-50,w:16,h:16,color:{r:255,g:255,b:00}}
+	Keys.push(n);
+	
+	// make a door for testing stuff
+	n = { x:100,y:0,w:16,h:100,color:{r:0,g:0,b:255}}
+	Doors.push(n);
+	
+	// make another door for testing stuff
+	n = { x:300,y:-100,w:16,h:100,color:{r:0,g:0,b:255}}
+	Doors.push(n);
+	
+	
 }
 
 // update: updates the game's state
@@ -267,6 +287,31 @@ function update() {
 		}
 	}
 	
+	// check collisions with keys
+	for (i = 0; i < Keys.length; i++) {
+		// if touching a key
+		if (blockCollision(Squarely,Keys[i])){
+			// add a key to the inventory
+			Squarely.keys++;
+			// delete the key
+			Keys.splice(i,1);
+		}
+	}
+	
+	// check for collisions with doors
+	for (i=0; i<Doors.length; i++) {
+		// if touching a door
+		if (blockCollision(Squarely,Doors[i])){
+			// if you have a key...
+			if (Squarely.keys > 0) { 
+				// lose a key
+				Squarely.keys--;
+				// open the door
+				Doors.splice(i,1);
+			}
+		}
+	}
+	
 	// update NPCs
 	for (i=0; i<Npcs.length; ++i) {
 		if (camCollision(camOffset,Npcs[i]) ) {
@@ -308,6 +353,20 @@ function render() {
 	for (i=0; i<Npcs.length; ++i) {
 		if (camCollision(camOffset,Npcs[i]) ) {
 			drawObject(Npcs[i]);
+		}
+	}
+	
+	// draw Keys
+	for (i=0; i<Keys.length; ++i) {
+		if (camCollision(camOffset,Keys[i]) ) {
+			drawObject(Keys[i]);
+		}
+	}
+	
+	// draw doors
+	for (i=0; i<Doors.length; ++i){
+		if (camCollision(camOffset,Doors[i]) ) {
+			drawObject(Doors[i]);
 		}
 	}
 	
