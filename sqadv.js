@@ -133,9 +133,13 @@ var Npcs = new Array();
 // init: initializes the game
 function init() {
 
+
+
 	// place Squarely squarely in the center of the world
-	Squarely.x = (_canvas.width/2)-(Squarely.w/2);
-	Squarely.y = (_canvas.height/2)-(Squarely.h/2);
+	//Squarely.x = (_canvas.width/2)-(Squarely.w/2);
+	//Squarely.y = (_canvas.height/2)-(Squarely.h/2);
+	Squarely.x = 0;
+	Squarely.y = 0;
 	
 	// add listeners for keyboard input
 	window.addEventListener('keyup',function(event) {Ctrls.onKeyUp(event); }, false);
@@ -282,6 +286,14 @@ function update() {
 
 // render: draws all the crap onto the canvas
 function render() { 
+
+	// resize the canvas to fill the window
+	_canvas.width = document.body.clientWidth;
+	_canvas.height = document.body.clientHeight;
+	canvasW = _canvas.width;
+	canvasH = _canvas.height;
+	camOffset.h = _canvas.height,
+	camOffset.w = _canvas.width
 
 	// clear canvas
 	_canvasContext.fillStyle = "rgb(220,220,220)";
