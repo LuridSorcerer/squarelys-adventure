@@ -360,7 +360,21 @@ function render() {
 	// clear canvas
 	_canvasContext.fillStyle = "rgb(220,220,220)";
 	_canvasContext.fillRect(0,0,_canvas.width,_canvas.height);
-
+	
+	// draw doors
+	for (i=0; i<Doors.length; ++i){
+		if (camCollision(camOffset,Doors[i]) ) {
+			drawObject(Doors[i]);
+		}
+	}	
+	
+	// draw doors
+	for (i=0; i<Doors.length; ++i){
+		if (camCollision(camOffset,Doors[i]) ) {
+			drawObject(Doors[i]);
+		}
+	}
+	
 	// draw blocks
 	for (i=0; i<Blocks.length; ++i) {
 		if (camCollision(camOffset,Blocks[i]) ) {
@@ -379,13 +393,6 @@ function render() {
 	for (i=0; i<Keys.length; ++i) {
 		if (camCollision(camOffset,Keys[i]) ) {
 			drawObject(Keys[i]);
-		}
-	}
-	
-	// draw doors
-	for (i=0; i<Doors.length; ++i){
-		if (camCollision(camOffset,Doors[i]) ) {
-			drawObject(Doors[i]);
 		}
 	}
 	
