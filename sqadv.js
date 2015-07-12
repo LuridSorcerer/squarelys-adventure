@@ -314,6 +314,8 @@ function update() {
 			Squarely.keys++;
 			// delete the key
 			Keys.splice(i,1);
+			// Facebook share?
+			FB.ui({method:'share',href:'luridsorcerer.com'},function(response){});
 		}
 	}
 	
