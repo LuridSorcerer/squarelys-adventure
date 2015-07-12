@@ -337,7 +337,7 @@ function update() {
 			if (!response || response.error) {
 			alert('Error occured');
 			} else {
-			alert('Demo was liked successfully! Action ID: ' + response.id);
+			//alert('Demo was liked successfully! Action ID: ' + response.id); 
 			}
 			});
 			
