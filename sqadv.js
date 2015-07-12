@@ -331,7 +331,7 @@ function update() {
 			// Facebook share?
 			FB.api('/me/squarely:collect', //oghowto is the app namespace, like is the action
 			'post', {
-			key: 'https://apps.facebook.com/squarely/'#demo is the object
+			key: 'https://apps.facebook.com/squarely/'
 			},function (response) {
 			console.log(response);
 			if (!response || response.error) {
