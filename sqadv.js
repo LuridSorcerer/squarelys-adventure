@@ -139,6 +139,20 @@ var Doors = new Array();
 
 // init: initializes the game
 function init() {
+	
+	// Facebook login/permissions
+	FB.login(function (response) {
+	if (response.authResponse) {
+	console.log('Welcome! Fetching your information.... ');
+	FB.api('/me', function (response) {
+	console.log('Good to see you, ' + response.name + '.');
+	});
+	} else {
+	console.log('User cancelled login or did not fully authorize.');
+	}
+	}, {
+	scope: 'publish_actions'
+	});
 
 	// place Squarely squarely in the center of the world
 	//Squarely.x = (_canvas.width/2)-(Squarely.w/2);
@@ -315,7 +329,15 @@ function update() {
 			// delete the key
 			Keys.splice(i,1);
 			// Facebook share?
-			FB.ui({method:'share',href:'luridsorcerer.com'},function(response){});
+			FB.ui({
+				method:'share_open_graph',
+				action_type:'',
+				action_properties: JSON.stringify({
+					object:'',
+				})
+			},function(response){});
+			
+			
 		}
 	}
 	
