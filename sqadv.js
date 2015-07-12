@@ -371,13 +371,6 @@ function render() {
 		}
 	}	
 	
-	// draw doors
-	// for (i=0; i<Doors.length; ++i){
-		// if (camCollision(camOffset,Doors[i]) ) {
-			// drawObject(Doors[i]);
-		// }
-	// }
-	
 	// draw blocks
 	blocksDrawn = 0;
 	for (i=0; i<Blocks.length; ++i) {
