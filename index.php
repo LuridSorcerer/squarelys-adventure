@@ -16,12 +16,17 @@ require_once('utils.php');
 ?>
 <html>
 
-<head>
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# squarely: http://ogp.me/ns/fb/squarely#">
 <meta charset="UTF-8" />
 <title>Squarely's Adventure</title>
 <style>
-head, body { margin: 0px;}
+html, body { margin: 0px;}
 </style>
+  <meta property="fb:app_id" content="320216424781470" /> 
+  <meta property="og:type"   content="squarely:key" /> 
+  <meta property="og:url"    content="Put your own URL to the object here" /> 
+  <meta property="og:title"  content="Sample Key" /> 
+  <meta property="og:image"  content="https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png" />
 </head>
 
 <body>

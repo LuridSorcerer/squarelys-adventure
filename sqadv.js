@@ -329,13 +329,17 @@ function update() {
 			// delete the key
 			Keys.splice(i,1);
 			// Facebook share?
-			FB.ui({
-				method:'share_open_graph',
-				action_type:'',
-				action_properties: JSON.stringify({
-					object:'',
-				})
-			},function(response){});
+			FB.api('/me/squarely:collect', //oghowto is the app namespace, like is the action
+			'post', {
+			key: 'https://apps.facebook.com/squarely/'#demo is the object
+			},function (response) {
+			console.log(response);
+			if (!response || response.error) {
+			alert('Error occured');
+			} else {
+			alert('Demo was liked successfully! Action ID: ' + response.id);
+			}
+			});
 			
 			
 		}
