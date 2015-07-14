@@ -140,20 +140,6 @@ var Doors = new Array();
 // init: initializes the game
 function init() {
 	
-	// Facebook login/permissions
-	FB.login(function (response) {
-	if (response.authResponse) {
-	console.log('Welcome! Fetching your information.... ');
-	FB.api('/me', function (response) {
-	console.log('Good to see you, ' + response.name + '.');
-	});
-	} else {
-	console.log('User cancelled login or did not fully authorize.');
-	}
-	}, {
-	scope: 'publish_actions'
-	});
-
 	// place Squarely squarely in the center of the world
 	//Squarely.x = (_canvas.width/2)-(Squarely.w/2);
 	//Squarely.y = (_canvas.height/2)-(Squarely.h/2);
@@ -328,20 +314,6 @@ function update() {
 			Squarely.keys++;
 			// delete the key
 			Keys.splice(i,1);
-			// Facebook share?
-			FB.api('/me/squarely:collect', //oghowto is the app namespace, like is the action
-			'post', {
-			key: 'https://apps.facebook.com/squarely/'
-			},function (response) {
-			console.log(response);
-			if (!response || response.error) {
-			alert('Error occured');
-			} else {
-			//alert('Demo was liked successfully! Action ID: ' + response.id); 
-			}
-			});
-			
-			
 		}
 	}
 	

@@ -1,18 +1,5 @@
 <?php
 
-// Provides access to app specific values such as your app id and app secret.
-// Defined in 'AppInfo.php'
-require_once('AppInfo.php');
-
-// Enforce https on production
-if (substr(AppInfo::getUrl(), 0, 8) != 'https://' && $_SERVER['REMOTE_ADDR'] != '127.0.0.1') {
-  header('Location: https://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-  exit();
-}
-
-// This provides access to helper functions defined in 'utils.php'
-require_once('utils.php');
-
 ?>
 <html>
 
@@ -22,33 +9,9 @@ require_once('utils.php');
 <style>
 html, body { margin: 0px;}
 </style>
-  <meta property="fb:app_id" content="320216424781470" /> 
-  <meta property="og:type"   content="squarely:key" /> 
-  <meta property="og:url"    content="Put your own URL to the object here" /> 
-  <meta property="og:title"  content="Sample Key" /> 
-  <meta property="og:image"  content="https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png" />
 </head>
 
 <body>
-
-    <script>
-
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '320216424781470',
-          xfbml      : true,
-          version    : 'v2.4'
-        });
-      };
-
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
-    </script>
 
 <!--
 <h3 align="center">Squarely's Adventure</H3>
@@ -67,12 +30,6 @@ Crap, looks like your browser doesn't do canvas. Sorry about all this, but it's 
 	<p>Our brave adventurer can also rotate, in order to navigate dungeons more effectively. Press ENTER to make him pivot at his top left corner.</p>
 	<p>Squarely is not the only citizen of the world. When Squarely steps on one of these people, they'll give him a message.</p>
 </section>
--->
-
-<!--
-<form>
-Blocks rendered:<input type="text" id="info"/>
-</form>
 -->
 
 <script type="text/javascript" src="sqadv.js"></script>
