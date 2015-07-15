@@ -1,2 +1,5 @@
 - Add multiple areas, ability to travel between them
 - Touch controls do not work at all
+- Toggle Switches/Buttons
+- Pushable blocks (must be same size or greater) (purple?)
+- Menu screens ("in-engine")
