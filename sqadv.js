@@ -5,7 +5,8 @@ if (_canvas && _canvas.getContext) {
 	_canvasContext = _canvas.getContext('2d');
 }
 
-	var fbName = "";
+// When we retrieve the player's name, we need somewhere to store it
+var fbName = "";
 
 // camera offsets, for scrolling camera
 var camOffset = {
@@ -142,8 +143,8 @@ var Doors = new Array();
 // init: initializes the game
 function init() {
 	
-
-
+	// CAUTION: FACEBOOK CRAP
+	// Get the user's name so we can display it for no particular reason.
 	window.fbAsyncInit = function() {
 		FB.init({
 			appId      : '320216424781470',
@@ -152,42 +153,43 @@ function init() {
 		});
 
 
-	function onLogin(response) {
-	  if (response.status == 'connected') {
-		FB.api('/me?fields=first_name', function(data) {
-		  //var welcomeBlock = document.getElementById('fb-welcome');
-		  //welcomeBlock.innerHTML = 'Hello, ' + data.first_name + '!';
-		  fbName = data.first_name;
+		// If logged in, get the user's name
+		function onLogin(response) {
+			if (response.status == 'connected') {
+				FB.api('/me?fields=first_name', function(data) {
+					fbName = data.first_name;
+				});
+			}
+		}
+
+		// If not logged in, show login page. 
+		//Seems redundant, the app won't load if you aren't logged in, will it?
+		FB.getLoginStatus(function(response) {
+			// Check login status on load, and if the user is
+			// already logged in, go directly to the welcome message.
+			if (response.status == 'connected') {
+				onLogin(response);
+			} else {
+				// Otherwise, show Login dialog first.
+				FB.login(function(response) {
+					onLogin(response);
+				}, {scope: 'user_friends, email'});
+			}
 		});
-	  }
-	}
+	};
 
-	FB.getLoginStatus(function(response) {
-	  // Check login status on load, and if the user is
-	  // already logged in, go directly to the welcome message.
-	  if (response.status == 'connected') {
-		onLogin(response);
-	  } else {
-		// Otherwise, show Login dialog first.
-		FB.login(function(response) {
-		  onLogin(response);
-		}, {scope: 'user_friends, email'});
-	  }
-	});
+	// I assume this loads the actual Facebook API?
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));	
 	
-  };
-
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));	
+	// END FACEBOOK CRAP
 	
 	// place Squarely squarely in the center of the world
-	//Squarely.x = (_canvas.width/2)-(Squarely.w/2);
-	//Squarely.y = (_canvas.height/2)-(Squarely.h/2);
 	Squarely.x = 0;
 	Squarely.y = 0;
 	
@@ -464,9 +466,9 @@ function render() {
 	msg = "Keys on-hand:"+Squarely.keys;
 	_canvasContext.fillText(msg,10,40);	
 	
-	// FACEBOOK
-	// Print name
-	_canvasContext.fillText(fbName,100,100);
+	// CAUTION: FACEBOOK CRAP
+	// Can't think of anything interesting to do, may as well just display the player's name somewhere.
+	_canvasContext.fillText(fbName,_canvas.width-100,50);
 
 }
 
