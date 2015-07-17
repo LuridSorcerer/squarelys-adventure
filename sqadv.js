@@ -1,12 +1,25 @@
 // set up canvas
 var _canvas = document.getElementById('canvas');
 var _canvasContext = null;
-if (_canvas && _canvas.getContext) {
-	_canvasContext = _canvas.getContext('2d');
-}
+if (_canvas && _canvas.getContext) { _canvasContext = _canvas.getContext('2d'); }
 
 // When we retrieve the player's name, we need somewhere to store it
 var fbName = "";
+
+// array of blocks (terrain)
+var Blocks = new Array();
+
+// array of Npcs, characters not controlled by the player
+var Npcs = new Array();
+
+// array of Keys, to be collected for unlocking doors
+var Keys = new Array();
+
+// array of Doors, to be opened by keys
+var Doors = new Array();
+
+// array of Teleporters, that send Squarley from one area to another
+var Teleporters = new Array();
 
 // camera offsets, for scrolling camera
 var camOffset = {
@@ -128,18 +141,6 @@ var Ctrls = {
 	
 };
 
-// array of blocks (terrain)
-var Blocks = new Array();
-
-// array of Npcs, characters not controlled by the player
-var Npcs = new Array();
-
-// array of Keys, to be collected for unlocking doors
-var Keys = new Array();
-
-// array of Doors, to be opened by keys
-var Doors = new Array();
-
 // init: initializes the game
 function init() {
 	
@@ -149,6 +150,7 @@ function init() {
 	// add listeners for keyboard input
 	window.addEventListener('keyup',function(event) {Ctrls.onKeyUp(event); }, false);
 	window.addEventListener('keydown',function(event) {Ctrls.onKeyDown(event); }, false);
+	window.addEventListener('blur',function(){Ctrls.init();},false);
 	_canvas.addEventListener('mousedown',function(event) {Ctrls.onMouseDown(event);},false);
 	_canvas.addEventListener('mouseup',function(event) {Ctrls.onMouseUp(event);},false);
 	_canvas.addEventListener('mousemove',function(event) {Ctrls.onMouseMove(event);},false);
@@ -157,9 +159,6 @@ function init() {
 	
 	// initialize controls
 	Ctrls.init();
-	
-	// assume buttons are up when the window loses focus
-	window.addEventListener('blur',function(){Ctrls.init();},false);
 	
 	// move to the first area
 	setArea1();
@@ -249,7 +248,20 @@ function update() {
 		}
 	}
 	
-	// check collision with NPCs
+	// check for collisions with teleporters
+	for (i=0; i<Teleporters.length; ++i) {
+		if (blockCollision(Squarely,Teleporters[i])){
+			// transport to the new area
+			if (Teleporters[i].target == 1) {
+				setArea1();
+				break;
+			}
+			if (Teleporters[i].target == 2) {
+				setArea2();
+				break;
+			}
+		}
+	}
 	
 	// move camera
 	camOffset.x = (_canvas.width/2)-(Squarely.w/2)-Squarely.x;
@@ -308,6 +320,15 @@ function render() {
 			KeysDrawn++;
 		}
 	}
+
+	// draw Teleporters
+	TeleportersDrawn = 0;
+	for (i=0; i<Teleporters.length; ++i) {
+		if (camCollision(camOffset,Teleporters[i]) ) {
+			drawObject(Teleporters[i]);
+			TeleportersDrawn++;
+		}
+	}
 	
 	// draw Squarely
 	drawObject(Squarely);
@@ -324,7 +345,11 @@ function render() {
 	_canvasContext.fillStyle = "rgb(0,0,0)";
 	_canvasContext.font = "bold 14px monospace";
 	// objects rendered/in area
-	msg = "Blocks:"+blocksDrawn+"/"+Blocks.length+" NPCs:"+NpcsDrawn+"/"+Npcs.length+" Keys:"+KeysDrawn+"/"+Keys.length+" Doors:"+doorsDrawn+"/"+Doors.length;
+	msg = "Blocks:"+blocksDrawn+"/"+Blocks.length+
+		" NPCs:"+NpcsDrawn+"/"+Npcs.length+
+		" Keys:"+KeysDrawn+"/"+Keys.length+
+		" Doors:"+doorsDrawn+"/"+Doors.length+
+		" Teleporters:"+TeleportersDrawn+"/"+Teleporters.length;
 	_canvasContext.fillText(msg,10,20);	
 	// keys held
 	msg = "Keys on-hand:"+Squarely.keys;
@@ -473,7 +498,7 @@ function changeSize(Squarely,block) {
 	
 }
 
-// rotate Squarley if possible
+// rotate Squarely if possible
 function rotate(obj) {
 
 	// find the x and y adjustments (to make him remain centered)
@@ -524,9 +549,10 @@ function setArea1() {
 	Npcs = [];
 	Keys = [];
 	Doors = [];
+	Teleporters = [];
 	
 	// populate the lists with the new area's objects
-	var b = {x:20,y:10,h:300,w:25,color:{r:0,g:0,b:0}};
+	var b = {x:20,y:80,h:300,w:25,color:{r:0,g:0,b:0}};
 	Blocks.push(b);
 	b = {x:400,y:350,h:200,w:200,color:{r:0,g:0,b:0}};
 	Blocks.push(b);
@@ -617,9 +643,36 @@ function setArea1() {
 	n = { x:-50,y:-50,w:16,h:16,color:{r:255,g:255,b:00}}
 	Keys.push(n);
 	
-	// move Squarely to his position in the new area
+	// make a teleporter to the next area
+	n = {x:-200,y:100,w:64,h:64,color:{r:255,g:255,b:255},target:2}
+	Teleporters.push(n);
+	
+	// reinitialize Squarely
 	Squarely.x = 0;
 	Squarely.y = 0;
+	Squarely.keys = 0;
+	// should we resize him? 
+}
+
+// initialize area 2
+function setArea2() {
+	
+	// clear out the current lists of objects
+	Blocks = [];
+	Npcs = [];
+	Keys = [];
+	Doors = [];
+	Teleporters = [];
+	
+	// add objects in the new area
+	var t = {x:100,y:0,w:64,h:64,color:{r:255,g:255,b:255},target:1}
+	Teleporters.push(t);
+	
+	// reinitialize Squarely
+	Squarely.x = 0;
+	Squarely.y = 0;
+	Squarely.keys = 0;
+	// should we resize him? 
 }
 
 function initFacebook() {
