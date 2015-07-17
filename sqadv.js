@@ -146,10 +146,6 @@ function init() {
 	// Initialize the Facebook crap
 	initFacebook();
 	
-	// place Squarely squarely in the center of the world
-	Squarely.x = 0;
-	Squarely.y = 0;
-	
 	// add listeners for keyboard input
 	window.addEventListener('keyup',function(event) {Ctrls.onKeyUp(event); }, false);
 	window.addEventListener('keydown',function(event) {Ctrls.onKeyDown(event); }, false);
@@ -162,101 +158,12 @@ function init() {
 	// initialize controls
 	Ctrls.init();
 	
-	// create a block or two-dozen
-	var b = {x:20,y:10,h:300,w:25,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	b = {x:400,y:350,h:200,w:200,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	b = {x:-500,y:-500,h:30,w:300,color:{r:20,g:20,b:20}};
-	Blocks.push(b);
-	
-	// create a little house thingy
-	b = {x:200,y:-300,h:16,w:100,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-	b = {x:200,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-	b = {x:300,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-	
-	// put a key in the house
-	n = { x:250,y:-250,w:16,h:16,color:{r:255,g:255,b:00}}
-	Keys.push(n);
-	
-	// make a door for testing stuff
-	n = { x:200+8,y:-200-16,w:100,h:16,color:{r:0,g:0,b:255}}
-	Doors.push(n);
-
-	// create another house thingy
-	b = {x:-200,y:-300,h:16,w:100,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-	b = {x:-200,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-	b = {x:-100,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-
-	// make another NPC for some reason
-	n = { x:-150,y:-250,w:16,h:16,color:{r:64,g:64,b:64},
-		COLORCHANGE: {r:0,g:3,b:7},
-		update: function() {
-			changeColor(this);
-		},
-		message1: "I am Error.",
-		message2: "",
-	}
-	Npcs.push(n);
-		
-	// make another door for testing stuff	
-	n = { x:-200+8,y:-200-16,w:100,h:16,color:{r:0,g:0,b:255}}
-	Doors.push(n);
-	
-	// create walls that can NEVER BE BREACHED
-	b = {x:-1000,y:-1000,h:20,w:2000,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	b = {x:-1000,y:-1000,h:2000,w:20,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	b = {x:-1000,y:1000,h:20,w:2020,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	b = {x:1000,y:-1000,h:2000,w:20,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	
-	// create block that will grow Squarely
-	b = {x:100,y:180,h:64,w:64,color:{r:0,g:255,b:0}};
-	Blocks.push(b);
-	
-	// create block that changes Squarely to normal size
-	b = {x:200,y:80,h:16,w:16,color:{r:0,g:255,b:0}};
-	Blocks.push(b);
-	
-	// create a block that will shrink Squarely
-	b = {x:300,y:80,h:8,w:64,color:{r:0,g:255,b:0}};
-	Blocks.push(b);
-
-	// prevent arrow keys from scrolling window
-	window.addEventListener("keydown", function(e) {
-		// space and arrow keys
-		if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-			e.preventDefault();
-		} 
-	}, false);
-	
 	// assume buttons are up when the window loses focus
 	window.addEventListener('blur',function(){Ctrls.init();},false);
-
-	// let's make an NPC!
-	var n = { x:600,y:300,w:16,h:16,color:{r:64,g:64,b:255}, 
-		COLORCHANGE: {r:0,g:0,b:4},
-		update: function() {
-			changeColor(this);
-		},
-		message1: "I'm a test NPC.",
-		message2: "I don't have much to say."
-	}
-	Npcs.push(n);
 	
-	// make a key for testing stuff
-	n = { x:-50,y:-50,w:16,h:16,color:{r:255,g:255,b:00}}
-	Keys.push(n);
-
+	// move to the first area
+	setArea1();
+	
 }
 
 // update: updates the game's state
@@ -607,6 +514,112 @@ function rotate(obj) {
 		}
 	}	
 	
+}
+
+// initialize area 1
+function setArea1() {
+
+	// clear out the current lists of objects
+	Blocks = [];
+	Npcs = [];
+	Keys = [];
+	Doors = [];
+	
+	// populate the lists with the new area's objects
+	var b = {x:20,y:10,h:300,w:25,color:{r:0,g:0,b:0}};
+	Blocks.push(b);
+	b = {x:400,y:350,h:200,w:200,color:{r:0,g:0,b:0}};
+	Blocks.push(b);
+	b = {x:-500,y:-500,h:30,w:300,color:{r:20,g:20,b:20}};
+	Blocks.push(b);
+	
+	// create a little house thingy
+	b = {x:200,y:-300,h:16,w:100,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+	b = {x:200,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+	b = {x:300,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+	
+	// put a key in the house
+	n = { x:250,y:-250,w:16,h:16,color:{r:255,g:255,b:00}}
+	Keys.push(n);
+	
+	// make a door for testing stuff
+	n = { x:200+8,y:-200-16,w:100,h:16,color:{r:0,g:0,b:255}}
+	Doors.push(n);
+
+	// create another house thingy
+	b = {x:-200,y:-300,h:16,w:100,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+	b = {x:-200,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+	b = {x:-100,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
+	Blocks.push(b)
+
+	// make another NPC for some reason
+	n = { x:-150,y:-250,w:16,h:16,color:{r:64,g:64,b:64},
+		COLORCHANGE: {r:0,g:3,b:7},
+		update: function() {
+			changeColor(this);
+		},
+		message1: "I am Error.",
+		message2: "",
+	}
+	Npcs.push(n);
+		
+	// make another door for testing stuff	
+	n = { x:-200+8,y:-200-16,w:100,h:16,color:{r:0,g:0,b:255}}
+	Doors.push(n);
+	
+	// create walls that can NEVER BE BREACHED
+	b = {x:-1000,y:-1000,h:20,w:2000,color:{r:0,g:0,b:0}};
+	Blocks.push(b);
+	b = {x:-1000,y:-1000,h:2000,w:20,color:{r:0,g:0,b:0}};
+	Blocks.push(b);
+	b = {x:-1000,y:1000,h:20,w:2020,color:{r:0,g:0,b:0}};
+	Blocks.push(b);
+	b = {x:1000,y:-1000,h:2000,w:20,color:{r:0,g:0,b:0}};
+	Blocks.push(b);
+	
+	// create block that will grow Squarely
+	b = {x:100,y:180,h:64,w:64,color:{r:0,g:255,b:0}};
+	Blocks.push(b);
+	
+	// create block that changes Squarely to normal size
+	b = {x:200,y:80,h:16,w:16,color:{r:0,g:255,b:0}};
+	Blocks.push(b);
+	
+	// create a block that will shrink Squarely
+	b = {x:300,y:80,h:8,w:64,color:{r:0,g:255,b:0}};
+	Blocks.push(b);
+
+	// prevent arrow keys from scrolling window
+	window.addEventListener("keydown", function(e) {
+		// space and arrow keys
+		if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+			e.preventDefault();
+		} 
+	}, false);
+
+	// let's make an NPC!
+	var n = { x:600,y:300,w:16,h:16,color:{r:64,g:64,b:255}, 
+		COLORCHANGE: {r:0,g:0,b:4},
+		update: function() {
+			changeColor(this);
+		},
+		message1: "I'm a test NPC.",
+		message2: "I don't have much to say."
+	}
+	Npcs.push(n);
+	
+	// make a key for testing stuff
+	n = { x:-50,y:-50,w:16,h:16,color:{r:255,g:255,b:00}}
+	Keys.push(n);
+	
+	// move Squarely to his position in the new area
+	Squarely.x = 0;
+	Squarely.y = 0;
 }
 
 function initFacebook() {
