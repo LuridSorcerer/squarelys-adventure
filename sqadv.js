@@ -21,6 +21,9 @@ var Doors = new Array();
 // array of Teleporters, that send Squarley from one area to another
 var Teleporters = new Array();
 
+// array of pushable blocks
+var Pushblocks = new Array();
+
 // camera offsets, for scrolling camera
 var camOffset = {
 	x: 0,
@@ -216,6 +219,17 @@ function update() {
 		}
 	}
 	
+	// check collisions with blocks
+	for (i = 0; i < Pushblocks.length; i++) {
+		if (pushblockCollision(Squarely,Pushblocks[i])) {
+			// if touching a green block
+			//if (Blocks[i].color.g==255 && Blocks[i].color.r==0 && Blocks[i].color.b==0) {
+				// change size
+				//changeSize(Squarely,Blocks[i]);
+			//}
+		}
+	}	
+	
 	// check collisions with keys
 	for (i = 0; i < Keys.length; i++) {
 		// if touching a key
@@ -327,6 +341,15 @@ function render() {
 		if (camCollision(camOffset,Teleporters[i]) ) {
 			drawObject(Teleporters[i]);
 			TeleportersDrawn++;
+		}
+	}
+
+	// draw pushable blocks
+	PushblocksDrawn = 0;
+	for (i=0; i<Pushblocks.length; ++i) {
+		if (camCollision(camOffset,Pushblocks[i]) ) {
+			drawObject(Pushblocks[i]);
+			PushblocksDrawn++;
 		}
 	}
 	
@@ -443,6 +466,79 @@ function blockCollision(mover,block) {
 	return true;
 }
 
+function pushblockCollision(mover,block) {
+	if(block.w !== Infinity && mover.w !== Infinity) {
+		if (isNaN(mover.w) || isNaN(block.w) || block.x > (mover.w+mover.x) || mover.x > (block.w+block.x) )
+			return false;
+		if (isNaN(mover.h) || isNaN(block.h) || block.y > (mover.h+mover.y) || mover.y > (block.h+block.y) )
+			return false;
+	}
+	
+	// check if he collided with the top
+	if ( (mover.y+mover.h >= block.y) && 
+		 ((mover.y+mover.speed)>(block.y+block.h)) ) {
+			mover.y = block.y+block.h+1;
+			// if bigger than the block, push it upward
+			if ((mover.h * mover.w) > (block.h * block.w)) {
+				block.y--;
+				// don't let it go inside of other blocks
+				for (i=0;i<Blocks.length;++i){
+					if(blockCollision(block,Blocks[i])) {
+						block.y++;
+					}
+				}
+			}
+	}
+	// check if he collided with the right
+	if ( (mover.x <= block.x+block.w) && 
+		 ((mover.x+mover.speed)>(block.x+block.w)) ) {
+			mover.x = block.x+block.w+1;
+			// if bigger than the block, push it upward
+			if ((mover.h * mover.w) > (block.h * block.w)) {
+				block.x--;
+				// don't let it go inside of other blocks
+				for (i=0;i<Blocks.length;++i){
+					if(blockCollision(block,Blocks[i])) {
+						block.x++;
+					}
+				}
+			}
+	}
+	// check if he collided with the bottom
+	if ( (mover.y <= block.y+block.h) && 
+		 ((mover.y-mover.speed)<(block.y-mover.h)) ) {
+			mover.y = block.y-mover.h-1;
+			// if bigger than the block, push it upward
+			if ((mover.h * mover.w) > (block.h * block.w)) {
+				block.y++;
+				// don't let it go inside of other blocks
+				for (i=0;i<Blocks.length;++i){
+					if(blockCollision(block,Blocks[i])) {
+						block.y--;
+					}
+				}
+			}
+	}
+	// check if he collided with the left
+	if ( (mover.x+mover.w >= block.x) && 
+		 ((mover.x-mover.speed)<(block.x-mover.w)) ) {
+			mover.x = block.x-mover.w-1;
+			// if bigger than the block, push it upward
+			if ((mover.h * mover.w) > (block.h * block.w)) {
+				block.x++;
+				// don't let it go inside of other blocks
+				for (i=0;i<Blocks.length;++i){
+					if(blockCollision(block,Blocks[i])) {
+						block.x--;
+					}
+				}
+			}			
+	}
+	
+	return true;
+}
+
+
 function changeColor(obj) {
 
 	// change red
@@ -550,6 +646,7 @@ function setArea1() {
 	Keys = [];
 	Doors = [];
 	Teleporters = [];
+	Pushblocks = [];
 	
 	// populate the lists with the new area's objects
 	var b = {x:20,y:80,h:300,w:25,color:{r:0,g:0,b:0}};
@@ -647,6 +744,10 @@ function setArea1() {
 	n = {x:-200,y:100,w:64,h:64,color:{r:255,g:255,b:255},target:2}
 	Teleporters.push(n);
 	
+	// create a pushable block 
+	b = {x:100,y:0,w:24,h:24,color:{r:255,g:0,b:255}}
+	Pushblocks.push(b)
+	
 	// reinitialize Squarely
 	Squarely.x = 0;
 	Squarely.y = 0;
@@ -663,6 +764,7 @@ function setArea2() {
 	Keys = [];
 	Doors = [];
 	Teleporters = [];
+	Pushblocks = [];
 	
 	// add objects in the new area
 	var t = {x:100,y:0,w:64,h:64,color:{r:255,g:255,b:255},target:1}
