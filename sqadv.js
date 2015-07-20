@@ -18,7 +18,7 @@ var Keys = new Array();
 // array of Doors, to be opened by keys
 var Doors = new Array();
 
-// array of Teleporters, that send Squarley from one area to another
+// array of teleporters, that send Squarely from one area to another
 var Teleporters = new Array();
 
 // array of pushable blocks
@@ -831,8 +831,10 @@ function initFacebook() {
 function gameLoop() {
 	update();
 	render();
+	window.requestAnimationFrame(gameLoop)
 }
 
 // ready to start!
 init();
-self.setInterval("gameLoop()",20);
+//self.setInterval("gameLoop()",20);
+window.requestAnimationFrame(gameLoop);
