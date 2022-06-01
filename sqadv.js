@@ -158,8 +158,7 @@ function init() {
 	Ctrls.init();
 	
 	// move to the first area
-	setArea1();
-	
+	changeArea("/data/area1.json");
 }
 
 // update: updates the game's state
@@ -215,13 +214,7 @@ function update() {
 	
 	// check collisions with blocks
 	for (i = 0; i < Pushblocks.length; i++) {
-		if (pushblockCollision(Squarely,Pushblocks[i])) {
-			// if touching a green block
-			//if (Blocks[i].color.g==255 && Blocks[i].color.r==0 && Blocks[i].color.b==0) {
-				// change size
-				//changeSize(Squarely,Blocks[i]);
-			//}
-		}
+		if (pushblockCollision(Squarely,Pushblocks[i])) { }
 	}	
 	
 	// check collisions with keys
@@ -252,7 +245,7 @@ function update() {
 	// update NPCs
 	for (i=0; i<Npcs.length; ++i) {
 		if (camCollision(camOffset,Npcs[i]) ) {
-			Npcs[i].update();
+			changeColor(Npcs[i]);
 		}
 	}
 	
@@ -261,11 +254,11 @@ function update() {
 		if (blockCollision(Squarely,Teleporters[i])){
 			// transport to the new area
 			if (Teleporters[i].target == 1) {
-				setArea1();
+				changeArea("/data/area1.json");
 				break;
 			}
 			if (Teleporters[i].target == 2) {
-				setArea2();
+				changeArea("/data/area2.json");
 				break;
 			}
 		}
@@ -528,7 +521,6 @@ function pushblockCollision(mover,block) {
 	return true;
 }
 
-
 function changeColor(obj) {
 
 	// change red
@@ -627,8 +619,9 @@ function rotate(obj) {
 	
 }
 
-// initialize area 1
-function setArea1() {
+// changeArea( filename )
+// maybe want to specify a new location for the player?
+function changeArea( filename ) {
 
 	// clear out the current lists of objects
 	Blocks = [];
@@ -638,133 +631,20 @@ function setArea1() {
 	Teleporters = [];
 	Pushblocks = [];
 	
-	// populate the lists with the new area's objects
-	var b = {x:20,y:80,h:300,w:25,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	b = {x:400,y:350,h:200,w:200,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	b = {x:-500,y:-500,h:30,w:300,color:{r:20,g:20,b:20}};
-	Blocks.push(b);
-	
-	// create a little house thingy
-	b = {x:200,y:-300,h:16,w:100,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-	b = {x:200,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-	b = {x:300,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-	
-	// put a key in the house
-	n = { x:250,y:-250,w:16,h:16,color:{r:255,g:255,b:00}}
-	Keys.push(n);
-	
-	// make a door for testing stuff
-	n = { x:200+8,y:-200-16,w:100,h:16,color:{r:0,g:0,b:255}}
-	Doors.push(n);
+	// load new objects from the specified file
+	fetch(filename).then(res=>{
+		return res.json();
+	}).then(jsondata => {
+		console.log(jsondata);
+		Blocks = jsondata.blocks
+		Npcs = jsondata.npcs;
+		Keys = jsondata.keys;
+		Doors = jsondata.doors;
+		Teleporters = jsondata.teleporters;
+		Pushblocks = jsondata.pushblocks;
+	});
 
-	// create another house thingy
-	b = {x:-200,y:-300,h:16,w:100,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-	b = {x:-200,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-	b = {x:-100,y:-300,h:100,w:16,color:{r:0,g:0,b:0}};
-	Blocks.push(b)
-
-	// make another NPC for some reason
-	n = { x:-150,y:-250,w:16,h:16,color:{r:64,g:64,b:64},
-		COLORCHANGE: {r:0,g:3,b:7},
-		update: function() {
-			changeColor(this);
-		},
-		message1: "I am Error.",
-		message2: "",
-	}
-	Npcs.push(n);
-		
-	// make another door for testing stuff	
-	n = { x:-200+8,y:-200-16,w:100,h:16,color:{r:0,g:0,b:255}}
-	Doors.push(n);
-	
-	// create walls that can NEVER BE BREACHED
-	b = {x:-1000,y:-1000,h:20,w:2000,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	b = {x:-1000,y:-1000,h:2000,w:20,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	b = {x:-1000,y:1000,h:20,w:2020,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	b = {x:1000,y:-1000,h:2000,w:20,color:{r:0,g:0,b:0}};
-	Blocks.push(b);
-	
-	// create block that will grow Squarely
-	b = {x:100,y:180,h:64,w:64,color:{r:0,g:255,b:0}};
-	Blocks.push(b);
-	
-	// create block that changes Squarely to normal size
-	b = {x:200,y:80,h:16,w:16,color:{r:0,g:255,b:0}};
-	Blocks.push(b);
-	
-	// create a block that will shrink Squarely
-	b = {x:300,y:80,h:8,w:64,color:{r:0,g:255,b:0}};
-	Blocks.push(b);
-
-	// prevent arrow keys from scrolling window
-	window.addEventListener("keydown", function(e) {
-		// space and arrow keys
-		if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-			e.preventDefault();
-		} 
-	}, false);
-
-	// let's make an NPC!
-	var n = { x:600,y:300,w:16,h:16,color:{r:64,g:64,b:255}, 
-		COLORCHANGE: {r:0,g:0,b:4},
-		update: function() {
-			changeColor(this);
-		},
-		message1: "I'm a test NPC.",
-		message2: "I don't have much to say."
-	}
-	Npcs.push(n);
-	
-	// make a key for testing stuff
-	n = { x:-50,y:-50,w:16,h:16,color:{r:255,g:255,b:00}}
-	Keys.push(n);
-	
-	// make a teleporter to the next area
-	n = {x:-200,y:100,w:64,h:64,color:{r:255,g:255,b:255},target:2}
-	Teleporters.push(n);
-	
-	// create a pushable block 
-	b = {x:100,y:0,w:24,h:24,color:{r:255,g:0,b:255}}
-	Pushblocks.push(b)
-	
-	// reinitialize Squarely
-	Squarely.x = 0;
-	Squarely.y = 0;
-	Squarely.keys = 0;
-	// should we resize him? 
-}
-
-// initialize area 2
-function setArea2() {
-	
-	// clear out the current lists of objects
-	Blocks = [];
-	Npcs = [];
-	Keys = [];
-	Doors = [];
-	Teleporters = [];
-	Pushblocks = [];
-	
-	// add objects in the new area
-	var t = {x:100,y:0,w:64,h:64,color:{r:255,g:255,b:255},target:1}
-	Teleporters.push(t);
-	
-	// reinitialize Squarely
-	Squarely.x = 0;
-	Squarely.y = 0;
-	Squarely.keys = 0;
-	// should we resize him? 
+	// move squarely to the new location
 }
 
 // gameLoop: performs the game loop
@@ -776,5 +656,4 @@ function gameLoop() {
 
 // ready to start!
 init();
-//self.setInterval("gameLoop()",20);
 window.requestAnimationFrame(gameLoop);
