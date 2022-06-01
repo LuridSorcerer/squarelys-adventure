@@ -1,1 +1,11 @@
-html, body, canvas { margin: 0px; overflow: hidden }
+body { 
+    overflow: hiden;
+}
+
+canvas {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}

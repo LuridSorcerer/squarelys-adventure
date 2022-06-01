@@ -154,10 +154,10 @@ function init() {
 function update() {
 
 	// resize the canvas to fill the window
-	_canvas.width = window.innerWidth;
-	_canvas.height = window.innerHeight;
-	canvasW = _canvas.width;
-	canvasH = _canvas.height;
+	_canvas.width = 720;
+	_canvas.height = 480;
+	_canvas.style.width = window.innerWidth;
+	_canvas.style.height = window.innerHeight;
 	camOffset.h = _canvas.height,
 	camOffset.w = _canvas.width
 
