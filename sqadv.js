@@ -1,28 +1,17 @@
 // set up canvas
-var _canvas = document.getElementById('canvas');
-var _canvasContext = null;
-if (_canvas && _canvas.getContext) { _canvasContext = _canvas.getContext('2d'); }
+let _canvas = document.getElementById('canvas');
+let _canvasContext = _canvas.getContext('2d');
 
-// array of blocks (terrain)
-var Blocks = new Array();
-
-// array of Npcs, characters not controlled by the player
-var Npcs = new Array();
-
-// array of Keys, to be collected for unlocking doors
-var Keys = new Array();
-
-// array of Doors, to be opened by keys
-var Doors = new Array();
-
-// array of teleporters, that send Squarely from one area to another
-var Teleporters = new Array();
-
-// array of pushable blocks
-var Pushblocks = new Array();
+// create arrays to store the game state
+let Blocks = [];
+let Npcs = [];
+let Keys = [];
+let Doors = [];
+let Teleporters = [];
+let Pushblocks = [];
 
 // camera offsets, for scrolling camera
-var camOffset = {
+let camOffset = {
 	x: 0,
 	y: 0,
 	h: _canvas.height,
@@ -30,7 +19,7 @@ var camOffset = {
 }
 
 // Squarely, the main character
-var Squarely = {
+let Squarely = {
 	x: 0,
 	y: 0,
 	h: 16,
@@ -52,7 +41,7 @@ var Squarely = {
 };
 
 // Ctrls, handles game input
-var Ctrls = {
+let Ctrls = {
 	
 	// mouse control parameters
 	mouseX: 0,
