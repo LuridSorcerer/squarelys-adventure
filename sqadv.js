@@ -3,9 +3,6 @@ var _canvas = document.getElementById('canvas');
 var _canvasContext = null;
 if (_canvas && _canvas.getContext) { _canvasContext = _canvas.getContext('2d'); }
 
-// When we retrieve the player's name, we need somewhere to store it
-var fbName = "";
-
 // array of blocks (terrain)
 var Blocks = new Array();
 
@@ -146,9 +143,6 @@ var Ctrls = {
 
 // init: initializes the game
 function init() {
-	
-	// Initialize the Facebook crap
-	initFacebook();
 	
 	// add listeners for keyboard input
 	window.addEventListener('keyup',function(event) {Ctrls.onKeyUp(event); }, false);
@@ -377,10 +371,6 @@ function render() {
 	// keys held
 	msg = "Keys on-hand:"+Squarely.keys;
 	_canvasContext.fillText(msg,10,40);	
-	
-	// CAUTION: FACEBOOK CRAP
-	// Can't think of anything interesting to do, may as well just display the player's name somewhere.
-	_canvasContext.fillText(fbName,_canvas.width-100,50);
 
 }
 
@@ -775,56 +765,6 @@ function setArea2() {
 	Squarely.y = 0;
 	Squarely.keys = 0;
 	// should we resize him? 
-}
-
-function initFacebook() {
-
-	// CAUTION: FACEBOOK CRAP
-	// Get the user's name so we can display it for no particular reason.
-	window.fbAsyncInit = function() {
-		FB.init({
-			appId      : '320216424781470',
-			xfbml      : true,
-			version    : 'v2.4'
-		});
-
-
-		// If logged in, get the user's name
-		function onLogin(response) {
-			if (response.status == 'connected') {
-				FB.api('/me?fields=first_name', function(data) {
-					fbName = data.first_name;
-				});
-			}
-		}
-
-		// If not logged in, show login page. 
-		//Seems redundant, the app won't load if you aren't logged in, will it?
-		FB.getLoginStatus(function(response) {
-			// Check login status on load, and if the user is
-			// already logged in, go directly to the welcome message.
-			if (response.status == 'connected') {
-				onLogin(response);
-			} else {
-				// Otherwise, show Login dialog first.
-				FB.login(function(response) {
-					onLogin(response);
-				}, {scope: 'user_friends, email'});
-			}
-		});
-	};
-
-	// I assume this loads the actual Facebook API?
-	(function(d, s, id){
-		var js, fjs = d.getElementsByTagName(s)[0];
-		if (d.getElementById(id)) {return;}
-		js = d.createElement(s); js.id = id;
-		js.src = "//connect.facebook.net/en_US/sdk.js";
-		fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));	
-	
-	// END FACEBOOK CRAP
-	
 }
 
 // gameLoop: performs the game loop
