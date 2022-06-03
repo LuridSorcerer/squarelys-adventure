@@ -147,7 +147,7 @@ function init() {
 	Ctrls.init();
 	
 	// move to the first area
-	changeArea("/data/area1.json");
+	changeArea("data/area1.json");
 }
 
 // update: updates the game's state
@@ -243,11 +243,11 @@ function update() {
 		if (blockCollision(Squarely,Teleporters[i])){
 			// transport to the new area
 			if (Teleporters[i].target == 1) {
-				changeArea("/data/area1.json");
+				changeArea("data/area1.json");
 				break;
 			}
 			if (Teleporters[i].target == 2) {
-				changeArea("/data/area2.json");
+				changeArea("data/area2.json");
 				break;
 			}
 		}
