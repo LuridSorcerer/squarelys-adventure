@@ -24,5 +24,6 @@
     "doors": [
         {"x":100,"y":-250,"w":100,"h":16}
     ],
-    "pushblocks": [ ]
+    "pushblocks": [ ],
+    "morphblocks" : []
 }
