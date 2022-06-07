@@ -9,6 +9,7 @@ let Keys = [];
 let Doors = [];
 let Teleporters = [];
 let Pushblocks = [];
+let Morphblocks = [];
 
 let debug = true;
 
@@ -136,16 +137,17 @@ function update() {
 
 			// DEBUG: Tell me which block
 			if (debug) console.log("Block: ",i);
-
-			// if touching a green block
-			// TODO: Color property removed, move morph blocks to their own array
-			// if (Blocks[i].color.g==255 && Blocks[i].color.r==0 && Blocks[i].color.b==0) {
-			// 	// change size
-			// 	changeSize(Squarely,Blocks[i]);
-			// }
 		}
 	}
-	
+
+	// if touching a green block
+	for (let i = 0; i < Morphblocks.length; i++) {
+		if (blockCollision(Squarely,Morphblocks[i])) {
+			// change size
+			changeSize(Squarely,Morphblocks[i]);
+		}
+	}
+
 	// check collisions with blocks
 	for (i = 0; i < Pushblocks.length; i++) {
 		if (pushblockCollision(Squarely,Pushblocks[i])) { }
@@ -282,7 +284,15 @@ function render() {
 			PushblocksDrawn++;
 		}
 	}
-	
+
+	// draw morph blocks
+	_canvasContext.fillStyle = "rgb(0,255,0)";
+	for (i=0; i<Morphblocks.length; ++i) {
+		if (camCollision(camOffset,Morphblocks[i]) ) {
+			drawObject(Morphblocks[i]);
+		}
+	}
+
 	// draw Squarely
 	_canvasContext.fillStyle = "rgb("+Squarely.color.r+","+Squarely.color.g+","+Squarely.color.b+")";
 	drawObject(Squarely);
@@ -582,6 +592,7 @@ function changeArea( filename ) {
 	Doors = [];
 	Teleporters = [];
 	Pushblocks = [];
+	Morphblocks = [];
 	
 	// load new objects from the specified file
 	fetch(filename).then(res=>{
@@ -594,6 +605,7 @@ function changeArea( filename ) {
 		Doors = jsondata.doors;
 		Teleporters = jsondata.teleporters;
 		Pushblocks = jsondata.pushblocks;
+		Morphblocks = jsondata.morphblocks;
 	});
 
 	// move squarely to the new location

@@ -24,6 +24,8 @@
         {"x":-38,"y":-300,"w":100,"h":16}
     ],
     "pushblocks": [],
-    "morphblocks" : []
+    "morphblocks" : [
+        {"x":28,"y":-225,"w":16,"h":8}
+    ]
 }
 
