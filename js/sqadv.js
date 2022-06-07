@@ -131,6 +131,10 @@ function update() {
 	// check collisions with blocks
 	for (i = 0; i < Blocks.length; i++) {
 		if (blockCollision(Squarely,Blocks[i])) {
+
+			// DEBUG: Tell me which block
+			console.log("Block: ",i);
+
 			// if touching a green block
 			if (Blocks[i].color.g==255 && Blocks[i].color.r==0 && Blocks[i].color.b==0) {
 				// change size
@@ -179,6 +183,9 @@ function update() {
 	// check for collisions with teleporters
 	for (i=0; i<Teleporters.length; ++i) {
 		if (blockCollision(Squarely,Teleporters[i])){
+			// reset Squareley's position
+			Squarely.x = Teleporters[i].move.x;
+			Squarely.y = Teleporters[i].move.y;
 			// transport to the new area
 			if (Teleporters[i].target == 1) {
 				changeArea("data/area1.json");
@@ -288,9 +295,11 @@ function render() {
 		" Doors:"+doorsDrawn+"/"+Doors.length+
 		" Teleporters:"+TeleportersDrawn+"/"+Teleporters.length;
 	_canvasContext.fillText(msg,10,20);	
-	// keys held
-	msg = "Keys on-hand:"+Squarely.keys;
-	_canvasContext.fillText(msg,10,40);	
+	// keys held (only if any are picked up)
+	if (Squarely.keys != 0) {
+		msg = "Keys on-hand:"+Squarely.keys;
+		_canvasContext.fillText(msg,10,40);	
+	}
 
 }
 
