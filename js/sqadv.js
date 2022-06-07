@@ -35,18 +35,10 @@ let Squarely = {
 	COLORCHANGE:  {r:5, g:0, b:0 },
 	speed: 2,
 	keys: 0,
-	canRotate: true,
-	update: function() {
-		// update Squarely's speed
-		//Squarely.speed = (Squarely.h + Squarely.w) / 16;
-		// change color
-		changeColor(this);
-	}
 };
 
 // Ctrls, handles game input
 // TODO: Touch / mouse control
-// TODO: Can this be moved to a separate file? 
 let Ctrls = {
 	
 	_pressed: {},
@@ -112,14 +104,16 @@ function update() {
 	// resize the canvas to fill the window
 	_canvas.width = 640;
 	_canvas.height = 360;
+	// TODO: Find a better way to scale this
+	// Possibly render to an offscreen canvas, then scale and draw to the displayed one?
+	// https://www.w3schools.com/tags/canvas_scale.asp
 	_canvas.style.width = window.innerWidth;
 	_canvas.style.height = window.innerHeight;
 	camOffset.h = _canvas.height,
 	camOffset.w = _canvas.width
 
 	// update Squarely
-	// (speed, color, etc.)
-	Squarely.update();
+	changeColor(Squarely);
 	
 	// check buttons
 	if (Ctrls.isDown(Ctrls.UP) != 0 || Ctrls.isDown(Ctrls.KEY_W) != 0) 
@@ -139,10 +133,9 @@ function update() {
 		}
 	}
 
-	// if touching a green block
+	// if touching a green block, change size
 	for (let i = 0; i < Morphblocks.length; i++) {
 		if (blockCollision(Squarely,Morphblocks[i])) {
-			// change size
 			changeSize(Squarely,Morphblocks[i]);
 		}
 	}
@@ -209,15 +202,6 @@ function update() {
 	// move camera
 	camOffset.x = (_canvas.width/2)-(Squarely.w/2)-Squarely.x;
 	camOffset.y = (_canvas.height/2)-(Squarely.h/2)-Squarely.y;
-	
-	// rotate
-	if (Ctrls.isDown(Ctrls.KEY_RETURN) && Squarely.canRotate) {
-		rotate(Squarely);
-		Squarely.canRotate = false;
-	} else if (!Ctrls.isDown(Ctrls.KEY_RETURN)) {
-		Squarely.canRotate = true;
-	}
-	
 }
 
 // render: draws all the crap onto the canvas
@@ -327,25 +311,28 @@ function boxCollision(obja,objb) {
 	return true;
 }
 
+// TODO: is this function even necessary? is there a generic rectangle collision that can be used instead? 
 function camCollision(cam,objb) {
-	cam.x *= -1;
+	cam.x *= -1; // what in God's green, flat earth is going on here? 
 	cam.y *= -1;
-	if(objb.w !== Infinity && cam.w !== Infinity) {
+	// maybe we can just put this in a try/catch instead of all these little error checks
+	if(objb.w !== Infinity && cam.w !== Infinity) { // "Is this error check necessary?" -- famous last words
 		if (isNaN(cam.w) || isNaN(objb.w) || objb.x > (cam.w+cam.x) || cam.x > (objb.w+objb.x) ) {
-			cam.x *= -1;
+			cam.x *= -1; // why is it necessary to flip signs then flip back? 
 			cam.y *= -1;
 			return false;
 		}if (isNaN(cam.h) || isNaN(objb.h) || objb.y > (cam.h+cam.y) || cam.y > (objb.h+objb.y) ) {
-			cam.x *= -1;
+			cam.x *= -1; // why is it necessary to flip signs then flip back? 
 			cam.y *= -1;
 			return false;
 		}
 	}
-	cam.x *= -1;
+	cam.x *= -1; // why is it necessary to flip signs then flip back? 
 	cam.y *= -1;
 	return true;
 }
 
+// TODO: can blockCollision and blockCollision be consolated, or at least have their shared code refactored?
 function blockCollision(mover,block) {
 	if(block.w !== Infinity && mover.w !== Infinity) {
 		if (isNaN(mover.w) || isNaN(block.w) || block.x > (mover.w+mover.x) || mover.x > (block.w+block.x) )
@@ -378,6 +365,7 @@ function blockCollision(mover,block) {
 	return true;
 }
 
+// TODO: see blockCollision comment
 function pushblockCollision(mover,block) {
 	if(block.w !== Infinity && mover.w !== Infinity) {
 		if (isNaN(mover.w) || isNaN(block.w) || block.x > (mover.w+mover.x) || mover.x > (block.w+block.x) )
