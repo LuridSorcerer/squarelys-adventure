@@ -10,6 +10,8 @@ let Doors = [];
 let Teleporters = [];
 let Pushblocks = [];
 
+let debug = true;
+
 // camera offsets, for scrolling camera
 let camOffset = {
 	x: 0,
@@ -133,13 +135,14 @@ function update() {
 		if (blockCollision(Squarely,Blocks[i])) {
 
 			// DEBUG: Tell me which block
-			console.log("Block: ",i);
+			if (debug) console.log("Block: ",i);
 
 			// if touching a green block
-			if (Blocks[i].color.g==255 && Blocks[i].color.r==0 && Blocks[i].color.b==0) {
-				// change size
-				changeSize(Squarely,Blocks[i]);
-			}
+			// TODO: Color property removed, move morph blocks to their own array
+			// if (Blocks[i].color.g==255 && Blocks[i].color.r==0 && Blocks[i].color.b==0) {
+			// 	// change size
+			// 	changeSize(Squarely,Blocks[i]);
+			// }
 		}
 	}
 	
@@ -271,7 +274,6 @@ function render() {
 	}
 
 	// draw pushable blocks
-
 	PushblocksDrawn = 0;
 	_canvasContext.fillStyle = "rgb(255,0,255)";
 	for (i=0; i<Pushblocks.length; ++i) {
@@ -296,18 +298,24 @@ function render() {
 	//Debug: Print stats
 	_canvasContext.fillStyle = "rgb(0,0,0)";
 	_canvasContext.font = "bold 14px monospace";
-	// objects rendered/in area
-	msg = "Blocks:"+blocksDrawn+"/"+Blocks.length+
-		" NPCs:"+NpcsDrawn+"/"+Npcs.length+
-		" Keys:"+KeysDrawn+"/"+Keys.length+
-		" Doors:"+doorsDrawn+"/"+Doors.length+
-		" Teleporters:"+TeleportersDrawn+"/"+Teleporters.length;
-	_canvasContext.fillText(msg,10,20);	
+
 	// keys held (only if any are picked up)
 	if (Squarely.keys != 0) {
 		msg = "Keys on-hand:"+Squarely.keys;
 		_canvasContext.fillText(msg,10,40);	
 	}
+
+	if (debug) {
+		// objects rendered/in area
+		msg = "Blocks:"+blocksDrawn+"/"+Blocks.length+
+			" NPCs:"+NpcsDrawn+"/"+Npcs.length+
+			" Keys:"+KeysDrawn+"/"+Keys.length+
+			" Doors:"+doorsDrawn+"/"+Doors.length+
+			" Teleporters:"+TeleportersDrawn+"/"+Teleporters.length;
+		_canvasContext.fillText(msg,10,20);	
+	}
+
+
 
 }
 
