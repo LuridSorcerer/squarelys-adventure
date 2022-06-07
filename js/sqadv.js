@@ -38,7 +38,7 @@ let Squarely = {
 	canRotate: true,
 	update: function() {
 		// update Squarely's speed
-		Squarely.speed = (Squarely.h + Squarely.w) / 16;
+		//Squarely.speed = (Squarely.h + Squarely.w) / 16;
 		// change color
 		changeColor(this);
 	}
@@ -134,7 +134,6 @@ function update() {
 	// check collisions with blocks
 	for (i = 0; i < Blocks.length; i++) {
 		if (blockCollision(Squarely,Blocks[i])) {
-
 			// DEBUG: Tell me which block
 			if (debug) console.log("Block: ",i);
 		}
@@ -229,77 +228,56 @@ function render() {
 	_canvasContext.fillRect(0,0,_canvas.width,_canvas.height);
 	
 	// draw doors
-	// debug: count doors drawn
-	_canvasContext.fillStyle = "rgb(0,0,255)";
-	doorsDrawn = 0;
 	for (i=0; i<Doors.length; ++i){
 		if (camCollision(camOffset,Doors[i]) ) {
-			drawObject(Doors[i]);
-			doorsDrawn++;
+			drawObject(Doors[i], "rgb(0,0,255)");
 		}
 	}	
 	
 	// draw blocks
-	blocksDrawn = 0;
-	_canvasContext.fillStyle = "rgb(0,0,0)";	
 	for (i=0; i<Blocks.length; ++i) {
 		if (camCollision(camOffset,Blocks[i]) ) {
-			drawObject(Blocks[i]);
-			blocksDrawn++;
+			drawObject(Blocks[i], "rgb(0,0,0)");
 		}
 	}
 	
 	// draw NPCs
-	NpcsDrawn = 0;
 	for (i=0; i<Npcs.length; ++i) {
 		if (camCollision(camOffset,Npcs[i]) ) {
-			_canvasContext.fillStyle = "rgb("+Npcs[i].color.r+","+Npcs[i].color.g+","+Npcs[i].color.b+")";
-			drawObject(Npcs[i]);
-			NpcsDrawn++;
+			drawObject(Npcs[i], "rgb("+Npcs[i].color.r+","+Npcs[i].color.g+","+Npcs[i].color.b+")");
 		}
 	}
 	
 	// draw Keys
-	KeysDrawn = 0;
-	_canvasContext.fillStyle = "rgb(255,255,0)";
 	for (i=0; i<Keys.length; ++i) {
 		if (camCollision(camOffset,Keys[i]) ) {
-			drawObject(Keys[i]);
-			KeysDrawn++;
+			drawObject(Keys[i], "rgb(255,255,0)");
 		}
 	}
 
 	// draw Teleporters
-	TeleportersDrawn = 0;
-	_canvasContext.fillStyle = "rgb(255,255,255)";
 	for (i=0; i<Teleporters.length; ++i) {
 		if (camCollision(camOffset,Teleporters[i]) ) {
-			drawObject(Teleporters[i]);
-			TeleportersDrawn++;
+			drawObject(Teleporters[i], "rgb(255,255,255)");
 		}
 	}
 
 	// draw pushable blocks
-	PushblocksDrawn = 0;
-	_canvasContext.fillStyle = "rgb(255,0,255)";
 	for (i=0; i<Pushblocks.length; ++i) {
 		if (camCollision(camOffset,Pushblocks[i]) ) {
-			drawObject(Pushblocks[i]);
-			PushblocksDrawn++;
+			drawObject(Pushblocks[i], "rgb(255,0,255)");
 		}
 	}
 
 	// draw morph blocks
-	_canvasContext.fillStyle = "rgb(0,255,0)";
 	for (i=0; i<Morphblocks.length; ++i) {
 		if (camCollision(camOffset,Morphblocks[i]) ) {
-			drawObject(Morphblocks[i]);
+			drawObject(Morphblocks[i], "rgb(0,255,0)");
 		}
 	}
 
 	// draw Squarely
-	_canvasContext.fillStyle = "rgb("+Squarely.color.r+","+Squarely.color.g+","+Squarely.color.b+")";
-	drawObject(Squarely);
+	drawObject(Squarely, "rgb("+Squarely.color.r+","+Squarely.color.g+","+Squarely.color.b+")");
 	
 	// write message of whatever NPC is being collided with
 	for (i=0; i<Npcs.length; ++i) {
@@ -308,33 +286,18 @@ function render() {
 			break;
 		}
 	}
-	
-	//Debug: Print stats
+
+	// Print keys held (only if any are picked up)
 	_canvasContext.fillStyle = "rgb(0,0,0)";
 	_canvasContext.font = "bold 14px monospace";
-
-	// keys held (only if any are picked up)
 	if (Squarely.keys != 0) {
 		msg = "Keys on-hand:"+Squarely.keys;
 		_canvasContext.fillText(msg,10,40);	
 	}
-
-	if (debug) {
-		// objects rendered/in area
-		msg = "Blocks:"+blocksDrawn+"/"+Blocks.length+
-			" NPCs:"+NpcsDrawn+"/"+Npcs.length+
-			" Keys:"+KeysDrawn+"/"+Keys.length+
-			" Doors:"+doorsDrawn+"/"+Doors.length+
-			" Teleporters:"+TeleportersDrawn+"/"+Teleporters.length;
-		_canvasContext.fillText(msg,10,20);	
-	}
-
-
-
 }
 
-function drawObject(obj) {
-	//_canvasContext.fillStyle = "rgb("+obj.color.r+","+obj.color.g+","+obj.color.b+")";
+function drawObject(obj,style) {
+	_canvasContext.fillStyle = style;	
 	_canvasContext.fillRect(obj.x+camOffset.x,obj.y+camOffset.y,obj.w,obj.h);
 }
 
@@ -554,11 +517,6 @@ function rotate(obj) {
 	obj.h = obj.w;
 	obj.w = temp;
 
-	// BUG: These adjustments let 
-	// adjust x and y (keep him centered)
-	//obj.x = obj.x - xadj;
-	//obj.y = obj.y - yadj;
-	
 	// if it'll push him into a block, switch back
 	for (i = 0; i < Blocks.length; i++) {
 		if (blockCollision(obj,Blocks[i])) {
@@ -586,7 +544,6 @@ function rotate(obj) {
 }
 
 // changeArea( filename )
-// maybe want to specify a new location for the player?
 function changeArea( filename ) {
 
 	// clear out the current lists of objects
