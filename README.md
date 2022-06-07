@@ -30,10 +30,8 @@ Blocks interact with Squarely based on their color:
 - White blocks are teleporters that will move Squarely to a new area. 
 
 ## Current Goals
-- Should size changing blocks be separate from regular blocks?
+- Add pushable block demo
 - Framerate-independent animation
-- Determine object color by what type it is, not manually for each one
-    - NPCs excluded
 - Draw UI/Menus using font built of rectangles instead of a typeface
 
 ## Old Goals
