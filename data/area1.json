@@ -14,7 +14,7 @@
             "COLORCHANGE":{"r":0,"g":0,"b":4},
             "message1":"Yellow KEYS can ",
             "message2":"open blue DOORS."},
-        {"x":142,"y":-300,"w":16,"h":16,"color":{"r":64,"g":90,"b":220},
+        {"x":174,"y":-300,"w":16,"h":16,"color":{"r":64,"g":90,"b":220},
             "COLORCHANGE":{"r":0,"g":3,"b":-7},
             "message1":"I am Error.",
             "message2":""}],
