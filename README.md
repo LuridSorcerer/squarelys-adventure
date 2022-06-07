@@ -31,7 +31,10 @@ Blocks interact with Squarely based on their color:
 
 ## Current Goals
 - Should size changing blocks be separate from regular blocks?
-- Framerate-independent movement
+- Framerate-independent animation
+- Determine object color by what type it is, not manually for each one
+    - NPCs excluded
+- Draw UI/Menus using font built of rectangles instead of a typeface
 
 ## Old Goals
 - Touch controls do not work at all
