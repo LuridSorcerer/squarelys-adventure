@@ -1,0 +1,14 @@
+{
+    "blocks": [],
+    "teleporters": [],
+    "npcs": [
+        {"x":-50,"y":-50,"w":16,"h":16,"color":{"r":64,"g":64,"b":44},
+            "COLORCHANGE":{"r":0,"g":0,"b":4},
+            "message1":"That's all for now,",
+            "message2":"please check back later."}
+    ],
+    "keys": [],
+    "doors": [],
+    "pushblocks": [],
+    "morphblocks" : []
+}

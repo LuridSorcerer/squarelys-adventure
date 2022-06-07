@@ -200,6 +200,10 @@ function update() {
 				changeArea("data/area2.json");
 				break;
 			}
+			if (Teleporters[i].target == 3) {
+				changeArea("data/the_end.json");
+				break;
+			}
 		}
 	}
 	
