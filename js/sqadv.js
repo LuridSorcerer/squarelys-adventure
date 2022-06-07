@@ -221,6 +221,7 @@ function render() {
 	
 	// draw doors
 	// debug: count doors drawn
+	_canvasContext.fillStyle = "rgb(0,0,255)";
 	doorsDrawn = 0;
 	for (i=0; i<Doors.length; ++i){
 		if (camCollision(camOffset,Doors[i]) ) {
@@ -231,6 +232,7 @@ function render() {
 	
 	// draw blocks
 	blocksDrawn = 0;
+	_canvasContext.fillStyle = "rgb(0,0,0)";	
 	for (i=0; i<Blocks.length; ++i) {
 		if (camCollision(camOffset,Blocks[i]) ) {
 			drawObject(Blocks[i]);
@@ -242,6 +244,7 @@ function render() {
 	NpcsDrawn = 0;
 	for (i=0; i<Npcs.length; ++i) {
 		if (camCollision(camOffset,Npcs[i]) ) {
+			_canvasContext.fillStyle = "rgb("+Npcs[i].color.r+","+Npcs[i].color.g+","+Npcs[i].color.b+")";
 			drawObject(Npcs[i]);
 			NpcsDrawn++;
 		}
@@ -249,6 +252,7 @@ function render() {
 	
 	// draw Keys
 	KeysDrawn = 0;
+	_canvasContext.fillStyle = "rgb(255,255,0)";
 	for (i=0; i<Keys.length; ++i) {
 		if (camCollision(camOffset,Keys[i]) ) {
 			drawObject(Keys[i]);
@@ -258,6 +262,7 @@ function render() {
 
 	// draw Teleporters
 	TeleportersDrawn = 0;
+	_canvasContext.fillStyle = "rgb(255,255,255)";
 	for (i=0; i<Teleporters.length; ++i) {
 		if (camCollision(camOffset,Teleporters[i]) ) {
 			drawObject(Teleporters[i]);
@@ -266,7 +271,9 @@ function render() {
 	}
 
 	// draw pushable blocks
+
 	PushblocksDrawn = 0;
+	_canvasContext.fillStyle = "rgb(255,0,255)";
 	for (i=0; i<Pushblocks.length; ++i) {
 		if (camCollision(camOffset,Pushblocks[i]) ) {
 			drawObject(Pushblocks[i]);
@@ -275,6 +282,7 @@ function render() {
 	}
 	
 	// draw Squarely
+	_canvasContext.fillStyle = "rgb("+Squarely.color.r+","+Squarely.color.g+","+Squarely.color.b+")";
 	drawObject(Squarely);
 	
 	// write message of whatever NPC is being collided with
@@ -304,7 +312,7 @@ function render() {
 }
 
 function drawObject(obj) {
-	_canvasContext.fillStyle = "rgb("+obj.color.r+","+obj.color.g+","+obj.color.b+")";
+	//_canvasContext.fillStyle = "rgb("+obj.color.r+","+obj.color.g+","+obj.color.b+")";
 	_canvasContext.fillRect(obj.x+camOffset.x,obj.y+camOffset.y,obj.w,obj.h);
 }
 
