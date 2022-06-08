@@ -32,6 +32,8 @@ Blocks interact with Squarely based on their color:
 ## Current Goals
 - Add pushable block demo
 - Framerate-independent animation
+    - https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
+    - http://jsfiddle.net/chicagogrooves/nRpVD/2/
 - Draw UI/Menus using font built of rectangles instead of a typeface
 
 ## Old Goals
