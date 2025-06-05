@@ -1,21 +1,9 @@
+import { Time } from './time.js';
+import { Ctrls } from './ctrls.js';
+
 // set up canvas
 let _canvas = document.getElementById('canvas');
 let _canvasContext = _canvas.getContext('2d');
-
-// create object for tracking time between frames
-let Time = {
-	now: 0,
-	delta: 0,
-	init: function() {
-		this.now = Date.now();
-		this.delta = 0;
-	},
-	update: function() {
-		let current = Date.now();
-		this.delta = current - this.now;
-		this.now = current;
-	}
-};
 
 // create variables to toggle various debug text
 let Debug = {
@@ -58,54 +46,7 @@ let Squarely = {
 
 // Ctrls, handles game input
 // TODO: Touch / mouse control
-let Ctrls = {
-	
-	_pressed: {},
-	
-	LEFT:  37,
-	UP:    38,
-	RIGHT: 39,
-	DOWN:  40,
-	
-	KEY_W:	87,
-	KEY_A:	65,
-	KEY_S:	83,
-	KEY_D:	68,
-	
-	KEY_RETURN: 13,
-	
-	init: function() {
-		this._pressed[this.UP] = 0;
-		this._pressed[this.DOWN] = 0;
-		this._pressed[this.LEFT] = 0;
-		this._pressed[this.RIGHT] = 0;
-		this._pressed[this.KEY_W] = 0;
-		this._pressed[this.KEY_A] = 0;
-		this._pressed[this.KEY_S] = 0;
-		this._pressed[this.KEY_D] = 0;
-		this._pressed[this.KEY_RETURN] = 0;
 
-		// add listeners for keyboard input
-		window.addEventListener('keyup',function(event) {Ctrls.onKeyUp(event); }, false);
-		window.addEventListener('keydown',function(event) {Ctrls.onKeyDown(event); }, false);
-		window.addEventListener('blur',function(){Ctrls.init();},false);
-	},
-	
-	isDown: function(keyCode) {
-		return this._pressed[keyCode];
-	},
-	
-	onKeyDown: function(event) {
-		if (this.isDown(event.keyCode) == 0) {
-			this._pressed[event.keyCode] = new Date().getTime();
-		}
-	},
-	
-	onKeyUp: function(event) {
-		this._pressed[event.keyCode] = 0;
-	},
-	
-};
 
 // resize: Resize the canvas to fit the window
 function resize() {
@@ -308,8 +249,7 @@ function render() {
 	_canvasContext.fillStyle = "rgb(0,0,0)";
 	_canvasContext.font = "bold 14px monospace";
 	if (Squarely.keys != 0) {
-		msg = "Keys on-hand:"+Squarely.keys;
-		_canvasContext.fillText(msg,10,40);	
+		_canvasContext.fillText("Keys on-hand:"+Squarely.keys,10,40);	
 	}
 	
 	// debug text
