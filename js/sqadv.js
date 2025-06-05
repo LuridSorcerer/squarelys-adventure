@@ -565,6 +565,9 @@ function changeArea( filename ) {
 	
 	// load new objects from the specified file
 	fetch(filename).then(res=>{
+		if (!res.ok) {
+			throw new Error("Load failed!");
+		}
 		return res.json();
 	}).then(jsondata => {
 		console.log(jsondata);
@@ -575,6 +578,8 @@ function changeArea( filename ) {
 		Teleporters = jsondata.teleporters;
 		Pushblocks = jsondata.pushblocks;
 		Morphblocks = jsondata.morphblocks;
+	}).catch( error => {
+		console.log("Failed to load level: " + error);
 	});
 
 	// move squarely to the new location
