@@ -200,7 +200,7 @@ function update() {
 	
 	// update NPCs
 	for (i=0; i<Npcs.length; ++i) {
-		if (camCollision(camOffset,Npcs[i]) ) {
+		if (boxCollision(camOffset,Npcs[i]) ) {
 			changeColor(Npcs[i]);
 		}
 	}
@@ -228,8 +228,8 @@ function update() {
 	}
 	
 	// move camera
-	camOffset.x = (_canvas.width/2)-(Squarely.w/2)-Squarely.x;
-	camOffset.y = (_canvas.height/2)-(Squarely.h/2)-Squarely.y;
+	camOffset.x = Squarely.x - (_canvas.width/2);
+	camOffset.y = Squarely.y - (_canvas.height/2);
 }
 
 // render: draws all the crap onto the canvas
@@ -241,49 +241,49 @@ function render() {
 	
 	// draw doors
 	for (i=0; i<Doors.length; ++i){
-		if (camCollision(camOffset,Doors[i]) ) {
+		if (boxCollision(camOffset,Doors[i]) ) {
 			drawObject(Doors[i], "rgb(0,0,255)");
 		}
 	}	
 	
 	// draw blocks
 	for (i=0; i<Blocks.length; ++i) {
-		if (camCollision(camOffset,Blocks[i]) ) {
+		if (boxCollision(camOffset,Blocks[i]) ) {
 			drawObject(Blocks[i], "rgb(0,0,0)");
 		}
 	}
 	
 	// draw NPCs
 	for (i=0; i<Npcs.length; ++i) {
-		if (camCollision(camOffset,Npcs[i]) ) {
+		if (boxCollision(camOffset,Npcs[i]) ) {
 			drawObject(Npcs[i], "rgb("+Npcs[i].color.r+","+Npcs[i].color.g+","+Npcs[i].color.b+")");
 		}
 	}
 	
 	// draw Keys
 	for (i=0; i<Keys.length; ++i) {
-		if (camCollision(camOffset,Keys[i]) ) {
+		if (boxCollision(camOffset,Keys[i]) ) {
 			drawObject(Keys[i], "rgb(255,255,0)");
 		}
 	}
 
 	// draw Teleporters
 	for (i=0; i<Teleporters.length; ++i) {
-		if (camCollision(camOffset,Teleporters[i]) ) {
+		if (boxCollision(camOffset,Teleporters[i]) ) {
 			drawObject(Teleporters[i], "rgb(255,255,255)");
 		}
 	}
 
 	// draw pushable blocks
 	for (i=0; i<Pushblocks.length; ++i) {
-		if (camCollision(camOffset,Pushblocks[i]) ) {
+		if (boxCollision(camOffset,Pushblocks[i]) ) {
 			drawObject(Pushblocks[i], "rgb(255,0,255)");
 		}
 	}
 
 	// draw morph blocks
 	for (i=0; i<Morphblocks.length; ++i) {
-		if (camCollision(camOffset,Morphblocks[i]) ) {
+		if (boxCollision(camOffset,Morphblocks[i]) ) {
 			drawObject(Morphblocks[i], "rgb(0,255,0)");
 		}
 	}
@@ -318,7 +318,7 @@ function render() {
 
 function drawObject(obj,style) {
 	_canvasContext.fillStyle = style;	
-	_canvasContext.fillRect(obj.x+camOffset.x,obj.y+camOffset.y,obj.w,obj.h);
+	_canvasContext.fillRect(obj.x-camOffset.x,obj.y-camOffset.y,obj.w,obj.h);
 }
 
 function drawMessage(obj) {
@@ -337,6 +337,7 @@ function drawMessage(obj) {
 	
 }
 
+// boxCollision: Check if two objects have overlapping rectangles
 function boxCollision(obja,objb) {
 	if(objb.w !== Infinity && obja.w !== Infinity) {
 		if (isNaN(obja.w) || isNaN(objb.w) || objb.x > (obja.w+obja.x) || obja.x > (objb.w+objb.x) )
@@ -347,28 +348,6 @@ function boxCollision(obja,objb) {
 	return true;
 }
 
-// TODO: is this function even necessary? is there a generic rectangle collision that can be used instead? 
-function camCollision(cam,objb) {
-	cam.x *= -1; // what in God's green, flat earth is going on here? 
-	cam.y *= -1;
-	// maybe we can just put this in a try/catch instead of all these little error checks
-	if(objb.w !== Infinity && cam.w !== Infinity) { // "Is this error check necessary?" -- famous last words
-		if (isNaN(cam.w) || isNaN(objb.w) || objb.x > (cam.w+cam.x) || cam.x > (objb.w+objb.x) ) {
-			cam.x *= -1; // why is it necessary to flip signs then flip back? 
-			cam.y *= -1;
-			return false;
-		}if (isNaN(cam.h) || isNaN(objb.h) || objb.y > (cam.h+cam.y) || cam.y > (objb.h+objb.y) ) {
-			cam.x *= -1; // why is it necessary to flip signs then flip back? 
-			cam.y *= -1;
-			return false;
-		}
-	}
-	cam.x *= -1; // why is it necessary to flip signs then flip back? 
-	cam.y *= -1;
-	return true;
-}
-
-// TODO: can blockCollision and blockCollision be consolated, or at least have their shared code refactored?
 function blockCollision(mover,block) {
 	if(block.w !== Infinity && mover.w !== Infinity) {
 		if (isNaN(mover.w) || isNaN(block.w) || block.x > (mover.w+mover.x) || mover.x > (block.w+block.x) )
