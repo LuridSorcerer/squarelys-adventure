@@ -107,27 +107,8 @@ let Ctrls = {
 	
 };
 
-// init: initializes the game
-function init() {
-	
-	// initialize controls
-	Ctrls.init();
-	
-	// initialize timer
-	Time.init();
-	
-	// move to the first area
-	changeArea("data/area1.json");
-}
-
-// update: updates the game's state
-function update() {
-
-	// update time
-	Time.update();
-
-	// TODO: Move this into an onresize() function, no need to do it
-	// every frame
+// resize: Resize the canvas to fit the window
+function resize() {
 	// resize the canvas to fill the window
 	_canvas.width = 640;
 	_canvas.height = 360;
@@ -139,6 +120,30 @@ function update() {
 	_canvas.style.height = window.innerHeight;
 	camOffset.h = _canvas.height,
 	camOffset.w = _canvas.width
+}
+
+// init: initializes the game
+function init() {
+	
+	// initialize controls
+	Ctrls.init();
+	
+	// initialize timer
+	Time.init();
+
+	// resize the canvas
+	resize();
+	window.addEventListener("resize",resize);
+	
+	// move to the first area
+	changeArea("data/area1.json");
+}
+
+// update: updates the game's state
+function update() {
+
+	// update time
+	Time.update();
 
 	// update Squarely
 	changeColor(Squarely);
