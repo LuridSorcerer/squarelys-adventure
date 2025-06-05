@@ -159,7 +159,7 @@ function update() {
 		{ Squarely.x += Squarely.speed; }
 	
 	// check collisions with blocks
-	for (i = 0; i < Blocks.length; i++) {
+	for (let i = 0; i < Blocks.length; i++) {
 		if (blockCollision(Squarely,Blocks[i])) {
 			// DEBUG: Tell me which block
 			if (Debug.blockfinder) console.log("Block: ",i);
@@ -174,12 +174,12 @@ function update() {
 	}
 
 	// check collisions with blocks
-	for (i = 0; i < Pushblocks.length; i++) {
+	for (let i = 0; i < Pushblocks.length; i++) {
 		if (pushblockCollision(Squarely,Pushblocks[i])) { }
 	}	
 	
 	// check collisions with keys
-	for (i = 0; i < Keys.length; i++) {
+	for (let i = 0; i < Keys.length; i++) {
 		// if touching a key
 		if (blockCollision(Squarely,Keys[i])){
 			// add a key to the inventory
@@ -190,7 +190,7 @@ function update() {
 	}
 	
 	// check for collisions with doors
-	for (i=0; i<Doors.length; i++) {
+	for (let i=0; i<Doors.length; i++) {
 		// if touching a door
 		if (blockCollision(Squarely,Doors[i])){
 			// if you have a key...
@@ -204,14 +204,14 @@ function update() {
 	}
 	
 	// update NPCs
-	for (i=0; i<Npcs.length; ++i) {
+	for (let i=0; i<Npcs.length; ++i) {
 		if (boxCollision(camOffset,Npcs[i]) ) {
 			changeColor(Npcs[i]);
 		}
 	}
 	
 	// check for collisions with teleporters
-	for (i=0; i<Teleporters.length; ++i) {
+	for (let i=0; i<Teleporters.length; ++i) {
 		if (blockCollision(Squarely,Teleporters[i])){
 			// reset Squareley's position
 			Squarely.x = Teleporters[i].move.x;
@@ -245,49 +245,49 @@ function render() {
 	_canvasContext.fillRect(0,0,_canvas.width,_canvas.height);
 	
 	// draw doors
-	for (i=0; i<Doors.length; ++i){
+	for (let i=0; i<Doors.length; ++i){
 		if (boxCollision(camOffset,Doors[i]) ) {
 			drawObject(Doors[i], "rgb(0,0,255)");
 		}
 	}	
 	
 	// draw blocks
-	for (i=0; i<Blocks.length; ++i) {
+	for (let i=0; i<Blocks.length; ++i) {
 		if (boxCollision(camOffset,Blocks[i]) ) {
 			drawObject(Blocks[i], "rgb(0,0,0)");
 		}
 	}
 	
 	// draw NPCs
-	for (i=0; i<Npcs.length; ++i) {
+	for (let i=0; i<Npcs.length; ++i) {
 		if (boxCollision(camOffset,Npcs[i]) ) {
 			drawObject(Npcs[i], "rgb("+Npcs[i].color.r+","+Npcs[i].color.g+","+Npcs[i].color.b+")");
 		}
 	}
 	
 	// draw Keys
-	for (i=0; i<Keys.length; ++i) {
+	for (let i=0; i<Keys.length; ++i) {
 		if (boxCollision(camOffset,Keys[i]) ) {
 			drawObject(Keys[i], "rgb(255,255,0)");
 		}
 	}
 
 	// draw Teleporters
-	for (i=0; i<Teleporters.length; ++i) {
+	for (let i=0; i<Teleporters.length; ++i) {
 		if (boxCollision(camOffset,Teleporters[i]) ) {
 			drawObject(Teleporters[i], "rgb(255,255,255)");
 		}
 	}
 
 	// draw pushable blocks
-	for (i=0; i<Pushblocks.length; ++i) {
+	for (let i=0; i<Pushblocks.length; ++i) {
 		if (boxCollision(camOffset,Pushblocks[i]) ) {
 			drawObject(Pushblocks[i], "rgb(255,0,255)");
 		}
 	}
 
 	// draw morph blocks
-	for (i=0; i<Morphblocks.length; ++i) {
+	for (let i=0; i<Morphblocks.length; ++i) {
 		if (boxCollision(camOffset,Morphblocks[i]) ) {
 			drawObject(Morphblocks[i], "rgb(0,255,0)");
 		}
@@ -297,7 +297,7 @@ function render() {
 	drawObject(Squarely, "rgb("+Squarely.color.r+","+Squarely.color.g+","+Squarely.color.b+")");
 	
 	// write message of whatever NPC is being collided with
-	for (i=0; i<Npcs.length; ++i) {
+	for (let i=0; i<Npcs.length; ++i) {
 		if(boxCollision(Squarely,Npcs[i])){
 			drawMessage(Npcs[i]);
 			break;
@@ -402,7 +402,7 @@ function pushblockCollision(mover,block) {
 			if ((mover.h * mover.w) > (block.h * block.w)) {
 				block.y--;
 				// don't let it go inside of other blocks
-				for (i=0;i<Blocks.length;++i){
+				for (let i=0;i<Blocks.length;++i){
 					if(blockCollision(block,Blocks[i])) {
 						block.y++;
 					}
@@ -417,7 +417,7 @@ function pushblockCollision(mover,block) {
 			if ((mover.h * mover.w) > (block.h * block.w)) {
 				block.x--;
 				// don't let it go inside of other blocks
-				for (i=0;i<Blocks.length;++i){
+				for (let i=0;i<Blocks.length;++i){
 					if(blockCollision(block,Blocks[i])) {
 						block.x++;
 					}
@@ -432,7 +432,7 @@ function pushblockCollision(mover,block) {
 			if ((mover.h * mover.w) > (block.h * block.w)) {
 				block.y++;
 				// don't let it go inside of other blocks
-				for (i=0;i<Blocks.length;++i){
+				for (let i=0;i<Blocks.length;++i){
 					if(blockCollision(block,Blocks[i])) {
 						block.y--;
 					}
@@ -447,7 +447,7 @@ function pushblockCollision(mover,block) {
 			if ((mover.h * mover.w) > (block.h * block.w)) {
 				block.x++;
 				// don't let it go inside of other blocks
-				for (i=0;i<Blocks.length;++i){
+				for (let i=0;i<Blocks.length;++i){
 					if(blockCollision(block,Blocks[i])) {
 						block.x--;
 					}
@@ -486,7 +486,7 @@ function changeSize(Squarely,block) {
 		if (Squarely.y < block.y) { Squarely.y--; }
 		// don't let Squarely grow through blocks
 		// check collisions with blocks
-		for (i = 0; i < Blocks.length; i++) {
+		for (let i = 0; i < Blocks.length; i++) {
 			if (blockCollision(Squarely,Blocks[i])) {
 				Squarely.h -= 1;
 			}
@@ -502,7 +502,7 @@ function changeSize(Squarely,block) {
 		if (Squarely.x < block.x) { Squarely.x--; }
 		// don't let Squarely grow through blocks
 		// check collisions with blocks
-		for (i = 0; i < Blocks.length; i++) {
+		for (let i = 0; i < Blocks.length; i++) {
 			if (blockCollision(Squarely,Blocks[i])) {
 				Squarely.w -= 1;
 			}
@@ -526,7 +526,7 @@ function rotate(obj) {
 	obj.w = temp;
 
 	// if it'll push him into a block, switch back
-	for (i = 0; i < Blocks.length; i++) {
+	for (let i = 0; i < Blocks.length; i++) {
 		if (blockCollision(obj,Blocks[i])) {
 		
 			// undo the rotation
@@ -538,7 +538,7 @@ function rotate(obj) {
 	}
 	
 	// if it'll push him into a door, switch back
-	for (i = 0; i < Doors.length; i++) {
+	for (let i = 0; i < Doors.length; i++) {
 		if (blockCollision(obj,Doors[i])) {
 		
 			// undo the rotation
