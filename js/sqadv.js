@@ -570,7 +570,6 @@ function changeArea( filename ) {
 		}
 		return res.json();
 	}).then(jsondata => {
-		console.log(jsondata);
 		Blocks = jsondata.blocks
 		Npcs = jsondata.npcs;
 		Keys = jsondata.keys;
