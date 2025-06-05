@@ -34,19 +34,25 @@ let Squarely = {
 	y: 0,
 	h: 16,
 	w: 16,
+	last_x: 0,
+	last_y: 0,
 	color: {r:64,g:64,b:64},
 	MAXH: 32,
 	MAXW: 32,
 	MINH:  8,
 	MINW:  8,
 	COLORCHANGE:  {r:5, g:0, b:0 },
-	speed: 2,
+	speed: {x:0, y:0 },
+	max_speed: 100,
 	keys: 0,
 };
 
-// Ctrls, handles game input
-// TODO: Touch / mouse control
-
+function moveObject(obj) {
+	obj.last_x = obj.x;
+	obj.last_y = obj.y;
+	obj.x += obj.speed.x * Time.delta / 1000;
+	obj.y += obj.speed.y * Time.delta / 1000;
+}
 
 // resize: Resize the canvas to fit the window
 function resize() {
@@ -90,14 +96,21 @@ function update() {
 	changeColor(Squarely);
 	
 	// check buttons
-	if (Ctrls.isDown(Ctrls.UP) != 0 || Ctrls.isDown(Ctrls.KEY_W) != 0) 
-		{ Squarely.y -= Squarely.speed; }
-	if (Ctrls.isDown(Ctrls.DOWN) != 0 || Ctrls.isDown(Ctrls.KEY_S) != 0 ) 
-		{ Squarely.y += Squarely.speed; }
-	if (Ctrls.isDown(Ctrls.LEFT) != 0 || Ctrls.isDown(Ctrls.KEY_A) != 0) 
-		{ Squarely.x -= Squarely.speed; }
-	if (Ctrls.isDown(Ctrls.RIGHT) != 0 || Ctrls.isDown (Ctrls.KEY_D) != 0) 
-		{ Squarely.x += Squarely.speed; }
+	Squarely.speed.y = 0;
+	Squarely.speed.x = 0;
+	if (Ctrls.isDown(Ctrls.UP) != 0 || Ctrls.isDown(Ctrls.KEY_W) != 0){ 
+		Squarely.speed.y = -100;
+	}
+	if (Ctrls.isDown(Ctrls.DOWN) != 0 || Ctrls.isDown(Ctrls.KEY_S) != 0 ) {
+		Squarely.speed.y = 100;
+	}		
+	if (Ctrls.isDown(Ctrls.LEFT) != 0 || Ctrls.isDown(Ctrls.KEY_A) != 0) {
+		Squarely.speed.x = -100;
+	}
+	if (Ctrls.isDown(Ctrls.RIGHT) != 0 || Ctrls.isDown (Ctrls.KEY_D) != 0) {
+		Squarely.speed.x = 100;
+	}
+	moveObject(Squarely);
 	
 	// check collisions with blocks
 	for (let i = 0; i < Blocks.length; i++) {
@@ -122,7 +135,7 @@ function update() {
 	// check collisions with keys
 	for (let i = 0; i < Keys.length; i++) {
 		// if touching a key
-		if (blockCollision(Squarely,Keys[i])){
+		if (boxCollision(Squarely,Keys[i])){
 			// add a key to the inventory
 			Squarely.keys++;
 			// delete the key
@@ -174,8 +187,8 @@ function update() {
 	}
 	
 	// move camera
-	camOffset.x = Squarely.x - (_canvas.width/2);
-	camOffset.y = Squarely.y - (_canvas.height/2);
+	camOffset.x = Squarely.x - (_canvas.width/2) + (Squarely.w/2);
+	camOffset.y = Squarely.y - (_canvas.height/2) + (Squarely.h/2);
 }
 
 // render: draws all the crap onto the canvas
@@ -302,24 +315,24 @@ function blockCollision(mover,block) {
 	}
 	
 	// check if he collided with the top
-	if ( (mover.y+mover.h >= block.y) && 
-		 ((mover.y+mover.speed)>(block.y+block.h)) ) {
-			mover.y = block.y+block.h+1;
+	if ( (mover.y+mover.h > block.y) && (mover.last_y+mover.h <= block.y) ) {
+		mover.y = block.y - mover.h;
+		mover.speed.y = 0;
 	}
 	// check if he collided with the right
-	if ( (mover.x <= block.x+block.w) && 
-		 ((mover.x+mover.speed)>(block.x+block.w)) ) {
-			mover.x = block.x+block.w+1;
+	if ( (mover.x+mover.w > block.x) && (mover.last_x+mover.w <= block.x) ) {
+		mover.x = block.x - mover.w;
+		mover.speed.x = 0;
 	}
 	// check if he collided with the bottom
-	if ( (mover.y <= block.y+block.h) && 
-		 ((mover.y-mover.speed)<(block.y-mover.h)) ) {
-			mover.y = block.y-mover.h-1;
+	if ( (mover.y < block.y+block.h) && (mover.last_y >= block.y+block.h) ) {
+		mover.y = block.y + block.h;
+		mover.speed.y = 0;
 	}
 	// check if he collided with the left
-	if ( (mover.x+mover.w >= block.x) && 
-		 ((mover.x-mover.speed)<(block.x-mover.w)) ) {
-			mover.x = block.x-mover.w-1;
+	if ( (mover.x < block.x+block.w) && (mover.last_x >= block.x+block.w) ) {
+		mover.x = block.x + block.w;
+		mover.speed.y = 0;
 	}
 	
 	return true;
@@ -335,9 +348,10 @@ function pushblockCollision(mover,block) {
 	}
 	
 	// check if he collided with the top
-	if ( (mover.y+mover.h >= block.y) && 
-		 ((mover.y+mover.speed)>(block.y+block.h)) ) {
-			mover.y = block.y+block.h+1;
+	if ( (mover.y+mover.h > block.y) && // is overlapping now
+		 (mover.last_y+mover.h <= block.y) ) { // was not last frame
+			mover.y = block.y - mover.h;
+			mover.last_y = mover.y;
 			// if bigger than the block, push it upward
 			if ((mover.h * mover.w) > (block.h * block.w)) {
 				block.y--;
@@ -453,45 +467,8 @@ function changeSize(Squarely,block) {
 	
 }
 
-// rotate Squarely if possible
-function rotate(obj) {
-
-	// find the x and y adjustments (to make him remain centered)
-	xadj = (obj.h - obj.w) / 2;
-	yadj = (obj.w - obj.h) / 2;
-
-	// swap height and width
-	temp = obj.h;
-	obj.h = obj.w;
-	obj.w = temp;
-
-	// if it'll push him into a block, switch back
-	for (let i = 0; i < Blocks.length; i++) {
-		if (blockCollision(obj,Blocks[i])) {
-		
-			// undo the rotation
-			temp = obj.h;
-			obj.h = obj.w;
-			obj.w = temp;
-			break;
-		}
-	}
-	
-	// if it'll push him into a door, switch back
-	for (let i = 0; i < Doors.length; i++) {
-		if (blockCollision(obj,Doors[i])) {
-		
-			// undo the rotation
-			temp = obj.h;
-			obj.h = obj.w;
-			obj.w = temp;
-			break;
-		}
-	}	
-	
-}
-
-// changeArea( filename )
+// changeArea(): Load a new area, specify a JSON containing the level 
+// properties. 
 function changeArea( filename ) {
 
 	// clear out the current lists of objects
@@ -521,7 +498,6 @@ function changeArea( filename ) {
 		console.log("Failed to load level: " + error);
 	});
 
-	// move squarely to the new location
 }
 
 // gameLoop: performs the game loop

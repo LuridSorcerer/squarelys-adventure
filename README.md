@@ -16,8 +16,6 @@ python3 -m http.server 8080
 
 Move using WASD or the arrow keys.
 
-Rotate Squarely by pressing the Enter key. 
-
 Blocks interact with Squarely based on their color:
 - Black blocks are walls that cannot be moved or passed through.
 
@@ -34,7 +32,6 @@ Blocks interact with Squarely based on their color:
 - Framerate-independent animation
     - https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
     - http://jsfiddle.net/chicagogrooves/nRpVD/2/
-- Draw UI/Menus using font built of rectangles instead of a typeface
 
 ## Old Goals
 - Touch controls do not work at all
