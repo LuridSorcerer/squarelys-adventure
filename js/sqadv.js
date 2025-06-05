@@ -2,6 +2,26 @@
 let _canvas = document.getElementById('canvas');
 let _canvasContext = _canvas.getContext('2d');
 
+// create object for tracking time between frames
+let Time = {
+	now: 0,
+	delta: 0,
+	init: function() {
+		this.now = Date.now();
+		this.delta = 0;
+	},
+	update: function() {
+		let current = Date.now();
+		this.delta = current - this.now;
+		this.now = current;
+	}
+};
+
+// create variables to toggle various debug text
+let Debug = {
+	deltatime: false,
+};
+
 // create arrays to store the game state
 let Blocks = [];
 let Npcs = [];
@@ -94,6 +114,9 @@ function init() {
 	// initialize controls
 	Ctrls.init();
 	
+	// initialize timer
+	Time.init();
+	
 	// move to the first area
 	changeArea("data/area1.json");
 }
@@ -101,11 +124,17 @@ function init() {
 // update: updates the game's state
 function update() {
 
+	// update time
+	Time.update();
+
+	// TODO: Move this into an onresize() function, no need to do it
+	// every frame
 	// resize the canvas to fill the window
 	_canvas.width = 640;
 	_canvas.height = 360;
 	// TODO: Find a better way to scale this
-	// Possibly render to an offscreen canvas, then scale and draw to the displayed one?
+	// Possibly render to an offscreen canvas, then scale and draw to
+	// the displayed one?
 	// https://www.w3schools.com/tags/canvas_scale.asp
 	_canvas.style.width = window.innerWidth;
 	_canvas.style.height = window.innerHeight;
@@ -277,6 +306,14 @@ function render() {
 	if (Squarely.keys != 0) {
 		msg = "Keys on-hand:"+Squarely.keys;
 		_canvasContext.fillText(msg,10,40);	
+	}
+	
+	// debug text
+	// delta time
+	if (Debug.deltatime) {
+		_canvasContext.fillStyle = "rgb(0,0,0)";
+		_canvasContext.font = "8px monospace";
+		_canvasContext.fillText("Delta time:"+Time.delta,100,10);
 	}
 }
 
