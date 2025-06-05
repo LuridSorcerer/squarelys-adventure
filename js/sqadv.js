@@ -20,6 +20,7 @@ let Time = {
 // create variables to toggle various debug text
 let Debug = {
 	deltatime: false,
+	blockfinder: false
 };
 
 // create arrays to store the game state
@@ -30,8 +31,6 @@ let Doors = [];
 let Teleporters = [];
 let Pushblocks = [];
 let Morphblocks = [];
-
-let debug = true;
 
 // camera offsets, for scrolling camera
 let camOffset = {
@@ -158,7 +157,7 @@ function update() {
 	for (i = 0; i < Blocks.length; i++) {
 		if (blockCollision(Squarely,Blocks[i])) {
 			// DEBUG: Tell me which block
-			if (debug) console.log("Block: ",i);
+			if (Debug.blockfinder) console.log("Block: ",i);
 		}
 	}
 
