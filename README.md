@@ -27,13 +27,11 @@ Blocks interact with Squarely based on their color:
 
 - White blocks are teleporters that will move Squarely to a new area. 
 
-## Current Goals
-- Add pushable block demo
-- Framerate-independent animation
-    - https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
-    - http://jsfiddle.net/chicagogrooves/nRpVD/2/
-
-## Old Goals
-- Touch controls do not work at all
-- Toggle Switches/Buttons
-- Menu screens ("in-engine")
+## Goals
+- Mouse controls
+- Touch controls
+- Bug fixes
+	- Can get stuck on corners
+	- Can sometimes clip through pushblocks
+- Pushblock collision
+- Finish pushblock demo area
