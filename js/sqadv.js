@@ -180,8 +180,11 @@ function update() {
 				break;
 			}
 			if (Teleporters[i].target == 3) {
-				changeArea("data/the_end.json");
+				changeArea("data/area3.json");
 				break;
+			}
+			else {
+				changeArea("data/the_end.json");
 			}
 		}
 	}
@@ -313,7 +316,6 @@ function blockCollision(mover,block) {
 		if (isNaN(mover.h) || isNaN(block.h) || block.y > (mover.h+mover.y) || mover.y > (block.h+block.y) )
 			return false;
 	}
-	
 	// check if he collided with the top
 	if ( (mover.y+mover.h > block.y) && (mover.last_y+mover.h <= block.y) ) {
 		mover.y = block.y - mover.h;
@@ -338,7 +340,10 @@ function blockCollision(mover,block) {
 	return true;
 }
 
-// TODO: see blockCollision comment
+// pushblockCollision(): check collisions with push blocks.
+// Squarely is blocked by them if smaller, can push them if >= in size.
+// KLUDGE: Without Math.floor, Squarely may pass through. Still may 
+// happen, but happens less often. 
 function pushblockCollision(mover,block) {
 	if(block.w !== Infinity && mover.w !== Infinity) {
 		if (isNaN(mover.w) || isNaN(block.w) || block.x > (mover.w+mover.x) || mover.x > (block.w+block.x) )
@@ -346,69 +351,44 @@ function pushblockCollision(mover,block) {
 		if (isNaN(mover.h) || isNaN(block.h) || block.y > (mover.h+mover.y) || mover.y > (block.h+block.y) )
 			return false;
 	}
-	
+	// calculate once if he is bigger than the target pushblock
+	let bigger = (mover.w * mover.h) >= (block.w *block.h);
 	// check if he collided with the top
-	if ( (mover.y+mover.h > block.y) && // is overlapping now
-		 (mover.last_y+mover.h <= block.y) ) { // was not last frame
+	if ( (mover.y+mover.h > block.y) && (mover.last_y+mover.h <= block.y) ) {
+		if (bigger) {
+			block.y = mover.y + mover.h;
+		} else {
 			mover.y = block.y - mover.h;
-			mover.last_y = mover.y;
-			// if bigger than the block, push it upward
-			if ((mover.h * mover.w) > (block.h * block.w)) {
-				block.y--;
-				// don't let it go inside of other blocks
-				for (let i=0;i<Blocks.length;++i){
-					if(blockCollision(block,Blocks[i])) {
-						block.y++;
-					}
-				}
-			}
+			mover.speed.y = 0;
+		}
 	}
 	// check if he collided with the right
-	if ( (mover.x <= block.x+block.w) && 
-		 ((mover.x+mover.speed)>(block.x+block.w)) ) {
-			mover.x = block.x+block.w+1;
-			// if bigger than the block, push it upward
-			if ((mover.h * mover.w) > (block.h * block.w)) {
-				block.x--;
-				// don't let it go inside of other blocks
-				for (let i=0;i<Blocks.length;++i){
-					if(blockCollision(block,Blocks[i])) {
-						block.x++;
-					}
-				}
-			}
+	if ( (mover.x+mover.w > block.x) && (mover.last_x+mover.w <= block.x) ) {
+		if (bigger) {
+			block.x = mover.x + mover.w;
+		} else {
+			mover.x = block.x - mover.w;
+			mover.speed.x = 0;
+		}
 	}
 	// check if he collided with the bottom
-	if ( (mover.y <= block.y+block.h) && 
-		 ((mover.y-mover.speed)<(block.y-mover.h)) ) {
-			mover.y = block.y-mover.h-1;
-			// if bigger than the block, push it upward
-			if ((mover.h * mover.w) > (block.h * block.w)) {
-				block.y++;
-				// don't let it go inside of other blocks
-				for (let i=0;i<Blocks.length;++i){
-					if(blockCollision(block,Blocks[i])) {
-						block.y--;
-					}
-				}
-			}
+	if ( (mover.y < block.y+block.h) && (mover.last_y >= block.y+block.h) ) {
+		if (bigger) {
+			block.y = Math.floor(mover.y - block.h);
+		} else {
+			mover.y = block.y + block.h;
+			mover.speed.y = 0;
+		}
 	}
 	// check if he collided with the left
-	if ( (mover.x+mover.w >= block.x) && 
-		 ((mover.x-mover.speed)<(block.x-mover.w)) ) {
-			mover.x = block.x-mover.w-1;
-			// if bigger than the block, push it upward
-			if ((mover.h * mover.w) > (block.h * block.w)) {
-				block.x++;
-				// don't let it go inside of other blocks
-				for (let i=0;i<Blocks.length;++i){
-					if(blockCollision(block,Blocks[i])) {
-						block.x--;
-					}
-				}
-			}			
+	if ( (mover.x < block.x+block.w) && (mover.last_x >= block.x+block.w) ) {
+		if (bigger) {
+			block.x = Math.floor(mover.x - block.w);
+		} else {
+			mover.x = block.x + block.w;
+			mover.speed.y = 0;
+		}		
 	}
-	
 	return true;
 }
 
