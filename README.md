@@ -35,5 +35,7 @@ Blocks interact with Squarely based on their color:
 - Bug fixes
 	- Can get stuck on corners
 	- Can sometimes clip through pushblocks
-- Pushblock collision
+- Pushblock collision against walls
 - Finish pushblock demo area
+- framerate independent color change
+- level editor
