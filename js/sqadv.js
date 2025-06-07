@@ -1,9 +1,22 @@
 import { Time } from './time.js';
 import { Ctrls } from './ctrls.js';
 
-// set up canvas
+// set up canvas page canvas
 let _canvas = document.getElementById('canvas');
 let _canvasContext = _canvas.getContext('2d');
+
+// create offscreen canvas for in-progress rendering
+// will be rendered to page canvas when complete
+const buffer = document.createElement("canvas");
+buffer.width = 640;
+buffer.height = 360;
+const bufferCtx = buffer.getContext("2d");
+
+// disable smoothing on the drawing context
+bufferCtx.imageSmoothingEnabled = false;
+bufferCtx.mozImageSmoothingEnabled = false;
+bufferCtx.webkitImageSmoothingEnabled = false;
+bufferCtx.msImageSmoothingEnabled = false;
 
 // create variables to toggle various debug text
 let Debug = {
@@ -24,8 +37,8 @@ let Morphblocks = [];
 let camOffset = {
 	x: 0,
 	y: 0,
-	h: _canvas.height,
-	w: _canvas.width
+	h: buffer.height,
+	w: buffer.width
 }
 
 // Squarely, the main character
@@ -56,17 +69,9 @@ function moveObject(obj) {
 
 // resize: Resize the canvas to fit the window
 function resize() {
-	// resize the canvas to fill the window
-	_canvas.width = 640;
-	_canvas.height = 360;
-	// TODO: Find a better way to scale this
-	// Possibly render to an offscreen canvas, then scale and draw to
-	// the displayed one?
-	// https://www.w3schools.com/tags/canvas_scale.asp
-	_canvas.style.width = window.innerWidth;
-	_canvas.style.height = window.innerHeight;
-	camOffset.h = _canvas.height,
-	camOffset.w = _canvas.width
+	// resize the page canvas to fill the window
+	_canvas.width = window.innerWidth;
+	_canvas.height = window.innerHeight;
 }
 
 // init: initializes the game
@@ -190,17 +195,18 @@ function update() {
 	}
 	
 	// move camera
-	camOffset.x = Squarely.x - (_canvas.width/2) + (Squarely.w/2);
-	camOffset.y = Squarely.y - (_canvas.height/2) + (Squarely.h/2);
+	camOffset.x = Squarely.x - (buffer.width/2) + (Squarely.w/2);
+	camOffset.y = Squarely.y - (buffer.height/2) + (Squarely.h/2);
+
 }
 
 // render: draws all the crap onto the canvas
 function render() { 
 
 	// clear canvas
-	_canvasContext.fillStyle = "rgb(220,220,220)";
-	_canvasContext.fillRect(0,0,_canvas.width,_canvas.height);
-	
+	bufferCtx.fillStyle = "silver";
+	bufferCtx.fillRect(0,0,buffer.width,buffer.height);
+
 	// draw doors
 	for (let i=0; i<Doors.length; ++i){
 		if (boxCollision(camOffset,Doors[i]) ) {
@@ -262,39 +268,36 @@ function render() {
 	}
 
 	// Print keys held (only if any are picked up)
-	_canvasContext.fillStyle = "rgb(0,0,0)";
-	_canvasContext.font = "bold 14px monospace";
+	bufferCtx.fillStyle = "rgb(0,0,0)";
+	bufferCtx.font = "bold 14px monospace";
 	if (Squarely.keys != 0) {
-		_canvasContext.fillText("Keys on-hand:"+Squarely.keys,10,40);	
+		bufferCtx.fillText("Keys on-hand:"+Squarely.keys,10,40);
 	}
-	
-	// debug text
-	// delta time
-	if (Debug.deltatime) {
-		_canvasContext.fillStyle = "rgb(0,0,0)";
-		_canvasContext.font = "8px monospace";
-		_canvasContext.fillText("Delta time:"+Time.delta,100,10);
-	}
+
+	// draw the offscreen canvas to the onscreen one
+	_canvasContext.drawImage(buffer,0,0,buffer.width,buffer.height,0,0,_canvas.width,_canvas.height);
 }
 
 function drawObject(obj,style) {
-	_canvasContext.fillStyle = style;	
-	_canvasContext.fillRect(obj.x-camOffset.x,obj.y-camOffset.y,obj.w,obj.h);
+	bufferCtx.fillStyle = style;	
+	bufferCtx.fillRect(obj.x-camOffset.x,obj.y-camOffset.y,obj.w,obj.h);
+
 }
 
 function drawMessage(obj) {
 
 	// create a text box
-	_canvasContext.fillStyle = "rgb(0,0,0)";
-	_canvasContext.fillRect(0,_canvas.height-100,_canvas.width,100);
-	_canvasContext.fillStyle = "rgb(255,255,255)";
-	_canvasContext.fillRect(10,_canvas.height-90,_canvas.width-20,80);
+	bufferCtx.fillStyle = "rgb(0,0,0)";
+	bufferCtx.fillRect(0,buffer.height-100,buffer.width,100);
+	bufferCtx.fillStyle = "rgb(255,255,255)";
+	bufferCtx.fillRect(10,buffer.height-90,buffer.width-20,80);
+
 
 	// write message
-	_canvasContext.fillStyle = "rgb(0,0,0)";
-	_canvasContext.font = "bold 24px monospace";
-	_canvasContext.fillText(obj.message1,20,_canvas.height-60);
-	_canvasContext.fillText(obj.message2,20,_canvas.height-20);
+	bufferCtx.fillStyle = "rgb(0,0,0)";
+	bufferCtx.font = "bold 24px monospace";
+	bufferCtx.fillText(obj.message1,20,buffer.height-60);
+	bufferCtx.fillText(obj.message2,20,buffer.height-20);
 	
 }
 
