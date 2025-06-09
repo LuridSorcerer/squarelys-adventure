@@ -18,12 +18,6 @@ bufferCtx.mozImageSmoothingEnabled = false;
 bufferCtx.webkitImageSmoothingEnabled = false;
 bufferCtx.msImageSmoothingEnabled = false;
 
-// create variables to toggle various debug text
-let Debug = {
-	deltatime: false,
-	blockfinder: false
-};
-
 // create arrays to store the game state
 let Blocks = [];
 let Npcs = [];
@@ -119,10 +113,7 @@ function update() {
 	
 	// check collisions with blocks
 	for (let i = 0; i < Blocks.length; i++) {
-		if (blockCollision(Squarely,Blocks[i])) {
-			// DEBUG: Tell me which block
-			if (Debug.blockfinder) console.log("Block: ",i);
-		}
+		if (blockCollision(Squarely,Blocks[i])) { }
 	}
 
 	// if touching a green block, change size
