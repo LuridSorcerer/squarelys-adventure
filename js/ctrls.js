@@ -36,7 +36,7 @@ export const Ctrls = {
 	},
 	
 	onKeyDown: function(event) {
-		if (this.isDown(event.keyCode) == 0) {
+		if (this.isDown(event.keyCode) === 0) {
 			this._pressed[event.keyCode] = new Date().getTime();
 		}
 	},

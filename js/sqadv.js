@@ -69,16 +69,16 @@ function update() {
 	// check buttons
 	Squarely.speed.y = 0;
 	Squarely.speed.x = 0;
-	if (Ctrls.isDown(Ctrls.UP) != 0 || Ctrls.isDown(Ctrls.KEY_W) != 0){ 
+	if (Ctrls.isDown(Ctrls.UP) !== 0 || Ctrls.isDown(Ctrls.KEY_W) !== 0){ 
 		Squarely.speed.y = -100;
 	}
-	if (Ctrls.isDown(Ctrls.DOWN) != 0 || Ctrls.isDown(Ctrls.KEY_S) != 0 ) {
+	if (Ctrls.isDown(Ctrls.DOWN) !== 0 || Ctrls.isDown(Ctrls.KEY_S) !==0 ) {
 		Squarely.speed.y = 100;
 	}		
-	if (Ctrls.isDown(Ctrls.LEFT) != 0 || Ctrls.isDown(Ctrls.KEY_A) != 0) {
+	if (Ctrls.isDown(Ctrls.LEFT) !== 0 || Ctrls.isDown(Ctrls.KEY_A) !== 0) {
 		Squarely.speed.x = -100;
 	}
-	if (Ctrls.isDown(Ctrls.RIGHT) != 0 || Ctrls.isDown (Ctrls.KEY_D) != 0) {
+	if (Ctrls.isDown(Ctrls.RIGHT) !== 0 || Ctrls.isDown (Ctrls.KEY_D) !== 0) {
 		Squarely.speed.x = 100;
 	}
 	moveObject(Squarely);
@@ -139,15 +139,15 @@ function update() {
 			Squarely.x = Teleporters[i].move.x;
 			Squarely.y = Teleporters[i].move.y;
 			// transport to the new area
-			if (Teleporters[i].target == 1) {
+			if (Teleporters[i].target === 1) {
 				changeArea("data/area1.json");
 				break;
 			}
-			if (Teleporters[i].target == 2) {
+			if (Teleporters[i].target === 2) {
 				changeArea("data/area2.json");
 				break;
 			}
-			if (Teleporters[i].target == 3) {
+			if (Teleporters[i].target === 3) {
 				changeArea("data/area3.json");
 				break;
 			}
@@ -230,7 +230,7 @@ function render() {
 	// Print keys held (only if any are picked up)
 	Screen.bufferCtx.fillStyle = "rgb(0,0,0)";
 	Screen.bufferCtx.font = "bold 14px monospace";
-	if (Squarely.keys != 0) {
+	if (Squarely.keys !== 0) {
 		Screen.bufferCtx.fillText("Keys:"+Squarely.keys, 10, 40);
 	}
 
