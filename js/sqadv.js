@@ -1,22 +1,6 @@
 import { Time } from './time.js';
 import { Ctrls } from './ctrls.js';
-
-// set up canvas page canvas
-let _canvas = document.getElementById('canvas');
-let _canvasContext = _canvas.getContext('2d');
-
-// create offscreen canvas for in-progress rendering
-// will be rendered to page canvas when complete
-const buffer = document.createElement("canvas");
-buffer.width = 640;
-buffer.height = 360;
-const bufferCtx = buffer.getContext("2d");
-
-// disable smoothing on the drawing context
-bufferCtx.imageSmoothingEnabled = false;
-bufferCtx.mozImageSmoothingEnabled = false;
-bufferCtx.webkitImageSmoothingEnabled = false;
-bufferCtx.msImageSmoothingEnabled = false;
+import { Screen } from './screen.js';
 
 // create arrays to store the game state
 let Blocks = [];
@@ -26,14 +10,6 @@ let Doors = [];
 let Teleporters = [];
 let Pushblocks = [];
 let Morphblocks = [];
-
-// camera offsets, for scrolling camera
-let camOffset = {
-	x: 0,
-	y: 0,
-	h: buffer.height,
-	w: buffer.width
-}
 
 // Squarely, the main character
 let Squarely = {
@@ -61,15 +37,11 @@ function moveObject(obj) {
 	obj.y += obj.speed.y * Time.delta / 1000;
 }
 
-// resize: Resize the canvas to fit the window
-function resize() {
-	// resize the page canvas to fill the window
-	_canvas.width = window.innerWidth;
-	_canvas.height = window.innerHeight;
-}
-
 // init: initializes the game
 function init() {
+
+	// initialize the screen
+	Screen.init();
 	
 	// initialize controls
 	Ctrls.init();
@@ -78,8 +50,8 @@ function init() {
 	Time.init();
 
 	// resize the canvas
-	resize();
-	window.addEventListener("resize",resize);
+	Screen.resize();
+	window.addEventListener("resize",Screen.resize);
 	
 	// move to the first area
 	changeArea("data/area1.json");
@@ -155,7 +127,7 @@ function update() {
 	
 	// update NPCs
 	for (let i=0; i<Npcs.length; ++i) {
-		if (boxCollision(camOffset,Npcs[i]) ) {
+		if (boxCollision(Screen.camera,Npcs[i]) ) {
 			changeColor(Npcs[i]);
 		}
 	}
@@ -186,63 +158,61 @@ function update() {
 	}
 	
 	// move camera
-	camOffset.x = Squarely.x - (buffer.width/2) + (Squarely.w/2);
-	camOffset.y = Squarely.y - (buffer.height/2) + (Squarely.h/2);
-
+	Screen.moveCamera(Squarely);
 }
 
 // render: draws all the crap onto the canvas
 function render() { 
 
 	// clear canvas
-	bufferCtx.fillStyle = "silver";
-	bufferCtx.fillRect(0,0,buffer.width,buffer.height);
+	Screen.bufferCtx.fillStyle = "silver";
+	Screen.bufferCtx.fillRect(0,0,Screen.buffer.width,Screen.buffer.height);
 
 	// draw doors
 	for (let i=0; i<Doors.length; ++i){
-		if (boxCollision(camOffset,Doors[i]) ) {
+		if (boxCollision(Screen.camera,Doors[i]) ) {
 			drawObject(Doors[i], "rgb(0,0,255)");
 		}
 	}	
 	
 	// draw blocks
 	for (let i=0; i<Blocks.length; ++i) {
-		if (boxCollision(camOffset,Blocks[i]) ) {
+		if (boxCollision(Screen.camera,Blocks[i]) ) {
 			drawObject(Blocks[i], "rgb(0,0,0)");
 		}
 	}
 	
 	// draw NPCs
 	for (let i=0; i<Npcs.length; ++i) {
-		if (boxCollision(camOffset,Npcs[i]) ) {
+		if (boxCollision(Screen.camera,Npcs[i]) ) {
 			drawObject(Npcs[i], "rgb("+Npcs[i].color.r+","+Npcs[i].color.g+","+Npcs[i].color.b+")");
 		}
 	}
 	
 	// draw Keys
 	for (let i=0; i<Keys.length; ++i) {
-		if (boxCollision(camOffset,Keys[i]) ) {
+		if (boxCollision(Screen.camera,Keys[i]) ) {
 			drawObject(Keys[i], "rgb(255,255,0)");
 		}
 	}
 
 	// draw Teleporters
 	for (let i=0; i<Teleporters.length; ++i) {
-		if (boxCollision(camOffset,Teleporters[i]) ) {
+		if (boxCollision(Screen.camera,Teleporters[i]) ) {
 			drawObject(Teleporters[i], "rgb(255,255,255)");
 		}
 	}
 
 	// draw pushable blocks
 	for (let i=0; i<Pushblocks.length; ++i) {
-		if (boxCollision(camOffset,Pushblocks[i]) ) {
+		if (boxCollision(Screen.camera,Pushblocks[i]) ) {
 			drawObject(Pushblocks[i], "rgb(255,0,255)");
 		}
 	}
 
 	// draw morph blocks
 	for (let i=0; i<Morphblocks.length; ++i) {
-		if (boxCollision(camOffset,Morphblocks[i]) ) {
+		if (boxCollision(Screen.camera,Morphblocks[i]) ) {
 			drawObject(Morphblocks[i], "rgb(0,255,0)");
 		}
 	}
@@ -259,37 +229,39 @@ function render() {
 	}
 
 	// Print keys held (only if any are picked up)
-	bufferCtx.fillStyle = "rgb(0,0,0)";
-	bufferCtx.font = "bold 14px monospace";
+	Screen.bufferCtx.fillStyle = "rgb(0,0,0)";
+	Screen.bufferCtx.font = "bold 14px monospace";
 	if (Squarely.keys != 0) {
-		bufferCtx.fillText("Keys on-hand:"+Squarely.keys,10,40);
+		Screen.bufferCtx.fillText("Keys:"+Squarely.keys, 10, 40);
 	}
 
 	// draw the offscreen canvas to the onscreen one
-	_canvasContext.drawImage(buffer,0,0,buffer.width,buffer.height,0,0,_canvas.width,_canvas.height);
+	Screen.canvasCtx.drawImage(
+		Screen.buffer,0,0,Screen.buffer.width,Screen.buffer.height,
+		0,0,Screen.canvas.width,Screen.canvas.height);
 }
 
+// TODO: Move to Screen module
 function drawObject(obj,style) {
-	bufferCtx.fillStyle = style;	
-	bufferCtx.fillRect(obj.x-camOffset.x,obj.y-camOffset.y,obj.w,obj.h);
-
+	Screen.bufferCtx.fillStyle = style;
+	Screen.bufferCtx.fillRect(obj.x-Screen.camera.x, obj.y-Screen.camera.y, obj.w, obj.h);
 }
 
+// TODO: Move to Screen module
 function drawMessage(obj) {
 
 	// create a text box
-	bufferCtx.fillStyle = "rgb(0,0,0)";
-	bufferCtx.fillRect(0,buffer.height-100,buffer.width,100);
-	bufferCtx.fillStyle = "rgb(255,255,255)";
-	bufferCtx.fillRect(10,buffer.height-90,buffer.width-20,80);
+	Screen.bufferCtx.fillStyle = "rgb(0,0,0)";
+	Screen.bufferCtx.fillRect(0,Screen.buffer.height-100,Screen.buffer.width,100);
+	Screen.bufferCtx.fillStyle = "rgb(255,255,255)";
+	Screen.bufferCtx.fillRect(10,Screen.buffer.height-90,Screen.buffer.width-20,80);
 
 
 	// write message
-	bufferCtx.fillStyle = "rgb(0,0,0)";
-	bufferCtx.font = "bold 24px monospace";
-	bufferCtx.fillText(obj.message1,20,buffer.height-60);
-	bufferCtx.fillText(obj.message2,20,buffer.height-20);
-	
+	Screen.bufferCtx.fillStyle = "rgb(0,0,0)";
+	Screen.bufferCtx.font = "bold 24px monospace";
+	Screen.bufferCtx.fillText(obj.message1,20,Screen.buffer.height-60);
+	Screen.bufferCtx.fillText(obj.message2,20,Screen.buffer.height-20);
 }
 
 // boxCollision: Check if two objects have overlapping rectangles
