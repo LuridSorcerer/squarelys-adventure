@@ -164,66 +164,65 @@ function update() {
 // render: draws all the crap onto the canvas
 function render() { 
 
-	// clear canvas
-	Screen.bufferCtx.fillStyle = "silver";
-	Screen.bufferCtx.fillRect(0,0,Screen.buffer.width,Screen.buffer.height);
+	// erase the canvas
+	Screen.clear();
 
 	// draw doors
 	for (let i=0; i<Doors.length; ++i){
 		if (boxCollision(Screen.camera,Doors[i]) ) {
-			drawObject(Doors[i], "rgb(0,0,255)");
+			Screen.drawObject(Doors[i], "rgb(0,0,255)");
 		}
 	}	
 	
 	// draw blocks
 	for (let i=0; i<Blocks.length; ++i) {
 		if (boxCollision(Screen.camera,Blocks[i]) ) {
-			drawObject(Blocks[i], "rgb(0,0,0)");
+			Screen.drawObject(Blocks[i], "rgb(0,0,0)");
 		}
 	}
 	
 	// draw NPCs
 	for (let i=0; i<Npcs.length; ++i) {
 		if (boxCollision(Screen.camera,Npcs[i]) ) {
-			drawObject(Npcs[i], "rgb("+Npcs[i].color.r+","+Npcs[i].color.g+","+Npcs[i].color.b+")");
+			Screen.drawObject(Npcs[i], "rgb("+Npcs[i].color.r+","+Npcs[i].color.g+","+Npcs[i].color.b+")");
 		}
 	}
 	
 	// draw Keys
 	for (let i=0; i<Keys.length; ++i) {
 		if (boxCollision(Screen.camera,Keys[i]) ) {
-			drawObject(Keys[i], "rgb(255,255,0)");
+			Screen.drawObject(Keys[i], "rgb(255,255,0)");
 		}
 	}
 
 	// draw Teleporters
 	for (let i=0; i<Teleporters.length; ++i) {
 		if (boxCollision(Screen.camera,Teleporters[i]) ) {
-			drawObject(Teleporters[i], "rgb(255,255,255)");
+			Screen.drawObject(Teleporters[i], "rgb(255,255,255)");
 		}
 	}
 
 	// draw pushable blocks
 	for (let i=0; i<Pushblocks.length; ++i) {
 		if (boxCollision(Screen.camera,Pushblocks[i]) ) {
-			drawObject(Pushblocks[i], "rgb(255,0,255)");
+			Screen.drawObject(Pushblocks[i], "rgb(255,0,255)");
 		}
 	}
 
 	// draw morph blocks
 	for (let i=0; i<Morphblocks.length; ++i) {
 		if (boxCollision(Screen.camera,Morphblocks[i]) ) {
-			drawObject(Morphblocks[i], "rgb(0,255,0)");
+			Screen.drawObject(Morphblocks[i], "rgb(0,255,0)");
 		}
 	}
 
 	// draw Squarely
-	drawObject(Squarely, "rgb("+Squarely.color.r+","+Squarely.color.g+","+Squarely.color.b+")");
+	Screen.drawObject(Squarely, "rgb("+Squarely.color.r+","+Squarely.color.g+","+Squarely.color.b+")");
 	
 	// write message of whatever NPC is being collided with
 	for (let i=0; i<Npcs.length; ++i) {
 		if(boxCollision(Squarely,Npcs[i])){
-			drawMessage(Npcs[i]);
+			Screen.drawMessage(Npcs[i]);
 			break;
 		}
 	}
@@ -239,29 +238,6 @@ function render() {
 	Screen.canvasCtx.drawImage(
 		Screen.buffer,0,0,Screen.buffer.width,Screen.buffer.height,
 		0,0,Screen.canvas.width,Screen.canvas.height);
-}
-
-// TODO: Move to Screen module
-function drawObject(obj,style) {
-	Screen.bufferCtx.fillStyle = style;
-	Screen.bufferCtx.fillRect(obj.x-Screen.camera.x, obj.y-Screen.camera.y, obj.w, obj.h);
-}
-
-// TODO: Move to Screen module
-function drawMessage(obj) {
-
-	// create a text box
-	Screen.bufferCtx.fillStyle = "rgb(0,0,0)";
-	Screen.bufferCtx.fillRect(0,Screen.buffer.height-100,Screen.buffer.width,100);
-	Screen.bufferCtx.fillStyle = "rgb(255,255,255)";
-	Screen.bufferCtx.fillRect(10,Screen.buffer.height-90,Screen.buffer.width-20,80);
-
-
-	// write message
-	Screen.bufferCtx.fillStyle = "rgb(0,0,0)";
-	Screen.bufferCtx.font = "bold 24px monospace";
-	Screen.bufferCtx.fillText(obj.message1,20,Screen.buffer.height-60);
-	Screen.bufferCtx.fillText(obj.message2,20,Screen.buffer.height-20);
 }
 
 // boxCollision: Check if two objects have overlapping rectangles
