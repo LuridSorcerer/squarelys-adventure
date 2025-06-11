@@ -3,13 +3,13 @@ import { Ctrls } from './ctrls.js';
 import { Screen } from './screen.js';
 
 // create arrays to store the game state
-let Blocks = [];
-let Npcs = [];
-let Keys = [];
-let Doors = [];
-let Teleporters = [];
-let Pushblocks = [];
-let Morphblocks = [];
+const Blocks = [];
+const Npcs = [];
+const Keys = [];
+const Doors = [];
+const Teleporters = [];
+const Pushblocks = [];
+const Morphblocks = [];
 
 // Squarely, the main character
 let Squarely = {
@@ -394,13 +394,13 @@ function changeSize(Squarely,block) {
 function changeArea( filename ) {
 
 	// clear out the current lists of objects
-	Blocks = [];
-	Npcs = [];
-	Keys = [];
-	Doors = [];
-	Teleporters = [];
-	Pushblocks = [];
-	Morphblocks = [];
+	Blocks.length = 0;
+	Npcs.length = 0;
+	Keys.length = 0;
+	Doors.length = 0;
+	Teleporters.length = 0;
+	Pushblocks.length = 0;
+	Morphblocks.length = 0;
 	
 	// load new objects from the specified file
 	fetch(filename).then(res=>{
@@ -409,13 +409,13 @@ function changeArea( filename ) {
 		}
 		return res.json();
 	}).then(jsondata => {
-		Blocks = jsondata.blocks
-		Npcs = jsondata.npcs;
-		Keys = jsondata.keys;
-		Doors = jsondata.doors;
-		Teleporters = jsondata.teleporters;
-		Pushblocks = jsondata.pushblocks;
-		Morphblocks = jsondata.morphblocks;
+		jsondata.blocks.forEach( (e,i) => { Blocks.push(e); } );
+		jsondata.npcs.forEach( (e,i) => { Npcs.push(e); } );
+		jsondata.keys.forEach( (e,i) => { Keys.push(e); } );
+		jsondata.doors.forEach( (e,i) => { Doors.push(e); } );;
+		jsondata.teleporters.forEach( (e,i) => { Teleporters.push(e); } );
+		jsondata.pushblocks.forEach( (e,i) => { Pushblocks.push(e); } );
+		jsondata.morphblocks.forEach( (e,i) => { Morphblocks.push(e); } );
 	}).catch( error => {
 		console.log("Failed to load level: " + error);
 	});
