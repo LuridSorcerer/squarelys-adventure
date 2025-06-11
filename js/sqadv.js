@@ -12,7 +12,7 @@ const Pushblocks = [];
 const Morphblocks = [];
 
 // Squarely, the main character
-let Squarely = {
+const Squarely = {
 	x: 0,
 	y: 0,
 	h: 16,
