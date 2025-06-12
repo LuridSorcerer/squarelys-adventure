@@ -1,6 +1,7 @@
 import { Time } from './time.js';
 import { Ctrls } from './ctrls.js';
 import { Screen } from './screen.js';
+import { Physics } from './physics.js';
 
 // create arrays to store the game state
 const Blocks = [];
@@ -29,13 +30,6 @@ const Squarely = {
 	max_speed: 100,
 	keys: 0,
 };
-
-function moveObject(obj) {
-	obj.last_x = obj.x;
-	obj.last_y = obj.y;
-	obj.x += obj.speed.x * Time.delta / 1000;
-	obj.y += obj.speed.y * Time.delta / 1000;
-}
 
 // init: initializes the game
 function init() {
@@ -81,29 +75,29 @@ function update() {
 	if (Ctrls.isDown(Ctrls.RIGHT) !== 0 || Ctrls.isDown (Ctrls.KEY_D) !== 0) {
 		Squarely.speed.x = 100;
 	}
-	moveObject(Squarely);
+	Physics.moveObject(Squarely,Time.delta);
 	
 	// check collisions with blocks
 	for (let i = 0; i < Blocks.length; i++) {
-		if (blockCollision(Squarely,Blocks[i])) { }
+		if (Physics.blockCollision(Squarely,Blocks[i])) { }
 	}
 
 	// if touching a green block, change size
 	for (let i = 0; i < Morphblocks.length; i++) {
-		if (blockCollision(Squarely,Morphblocks[i])) {
+		if (Physics.blockCollision(Squarely,Morphblocks[i])) {
 			changeSize(Squarely,Morphblocks[i]);
 		}
 	}
 
 	// check collisions with blocks
 	for (let i = 0; i < Pushblocks.length; i++) {
-		if (pushblockCollision(Squarely,Pushblocks[i])) { }
+		if (Physics.pushblockCollision(Squarely,Pushblocks[i])) { }
 	}	
 	
 	// check collisions with keys
 	for (let i = 0; i < Keys.length; i++) {
 		// if touching a key
-		if (boxCollision(Squarely,Keys[i])){
+		if (Physics.boxCollision(Squarely,Keys[i])){
 			// add a key to the inventory
 			Squarely.keys++;
 			// delete the key
@@ -114,7 +108,7 @@ function update() {
 	// check for collisions with doors
 	for (let i=0; i<Doors.length; i++) {
 		// if touching a door
-		if (blockCollision(Squarely,Doors[i])){
+		if (Physics.blockCollision(Squarely,Doors[i])){
 			// if you have a key...
 			if (Squarely.keys > 0) { 
 				// lose a key
@@ -127,14 +121,14 @@ function update() {
 	
 	// update NPCs
 	for (let i=0; i<Npcs.length; ++i) {
-		if (boxCollision(Screen.camera,Npcs[i]) ) {
+		if (Physics.boxCollision(Screen.camera,Npcs[i]) ) {
 			changeColor(Npcs[i]);
 		}
 	}
 	
 	// check for collisions with teleporters
 	for (let i=0; i<Teleporters.length; ++i) {
-		if (blockCollision(Squarely,Teleporters[i])){
+		if (Physics.blockCollision(Squarely,Teleporters[i])){
 			// reset Squareley's position
 			Squarely.x = Teleporters[i].move.x;
 			Squarely.y = Teleporters[i].move.y;
@@ -169,49 +163,49 @@ function render() {
 
 	// draw doors
 	for (let i=0; i<Doors.length; ++i){
-		if (boxCollision(Screen.camera,Doors[i]) ) {
+		if (Physics.boxCollision(Screen.camera,Doors[i]) ) {
 			Screen.drawObject(Doors[i], "rgb(0,0,255)");
 		}
 	}	
 	
 	// draw blocks
 	for (let i=0; i<Blocks.length; ++i) {
-		if (boxCollision(Screen.camera,Blocks[i]) ) {
+		if (Physics.boxCollision(Screen.camera,Blocks[i]) ) {
 			Screen.drawObject(Blocks[i], "rgb(0,0,0)");
 		}
 	}
 	
 	// draw NPCs
 	for (let i=0; i<Npcs.length; ++i) {
-		if (boxCollision(Screen.camera,Npcs[i]) ) {
+		if (Physics.boxCollision(Screen.camera,Npcs[i]) ) {
 			Screen.drawObject(Npcs[i], "rgb("+Npcs[i].color.r+","+Npcs[i].color.g+","+Npcs[i].color.b+")");
 		}
 	}
 	
 	// draw Keys
 	for (let i=0; i<Keys.length; ++i) {
-		if (boxCollision(Screen.camera,Keys[i]) ) {
+		if (Physics.boxCollision(Screen.camera,Keys[i]) ) {
 			Screen.drawObject(Keys[i], "rgb(255,255,0)");
 		}
 	}
 
 	// draw Teleporters
 	for (let i=0; i<Teleporters.length; ++i) {
-		if (boxCollision(Screen.camera,Teleporters[i]) ) {
+		if (Physics.boxCollision(Screen.camera,Teleporters[i]) ) {
 			Screen.drawObject(Teleporters[i], "rgb(255,255,255)");
 		}
 	}
 
 	// draw pushable blocks
 	for (let i=0; i<Pushblocks.length; ++i) {
-		if (boxCollision(Screen.camera,Pushblocks[i]) ) {
+		if (Physics.boxCollision(Screen.camera,Pushblocks[i]) ) {
 			Screen.drawObject(Pushblocks[i], "rgb(255,0,255)");
 		}
 	}
 
 	// draw morph blocks
 	for (let i=0; i<Morphblocks.length; ++i) {
-		if (boxCollision(Screen.camera,Morphblocks[i]) ) {
+		if (Physics.boxCollision(Screen.camera,Morphblocks[i]) ) {
 			Screen.drawObject(Morphblocks[i], "rgb(0,255,0)");
 		}
 	}
@@ -221,7 +215,7 @@ function render() {
 	
 	// write message of whatever NPC is being collided with
 	for (let i=0; i<Npcs.length; ++i) {
-		if(boxCollision(Squarely,Npcs[i])){
+		if(Physics.boxCollision(Squarely,Npcs[i])){
 			Screen.drawMessage(Npcs[i]);
 			break;
 		}
@@ -238,100 +232,6 @@ function render() {
 	Screen.canvasCtx.drawImage(
 		Screen.buffer,0,0,Screen.buffer.width,Screen.buffer.height,
 		0,0,Screen.canvas.width,Screen.canvas.height);
-}
-
-// boxCollision: Check if two objects have overlapping rectangles
-function boxCollision(obja,objb) {
-	if(objb.w !== Infinity && obja.w !== Infinity) {
-		if (isNaN(obja.w) || isNaN(objb.w) || objb.x > (obja.w+obja.x) || obja.x > (objb.w+objb.x) )
-			return false;
-		if (isNaN(obja.h) || isNaN(objb.h) || objb.y > (obja.h+obja.y) || obja.y > (objb.h+objb.y) )
-			return false;
-	}
-	return true;
-}
-
-function blockCollision(mover,block) {
-	if(block.w !== Infinity && mover.w !== Infinity) {
-		if (isNaN(mover.w) || isNaN(block.w) || block.x > (mover.w+mover.x) || mover.x > (block.w+block.x) )
-			return false;
-		if (isNaN(mover.h) || isNaN(block.h) || block.y > (mover.h+mover.y) || mover.y > (block.h+block.y) )
-			return false;
-	}
-	// check if he collided with the top
-	if ( (mover.y+mover.h > block.y) && (mover.last_y+mover.h <= block.y) ) {
-		mover.y = block.y - mover.h;
-		mover.speed.y = 0;
-	}
-	// check if he collided with the right
-	if ( (mover.x+mover.w > block.x) && (mover.last_x+mover.w <= block.x) ) {
-		mover.x = block.x - mover.w;
-		mover.speed.x = 0;
-	}
-	// check if he collided with the bottom
-	if ( (mover.y < block.y+block.h) && (mover.last_y >= block.y+block.h) ) {
-		mover.y = block.y + block.h;
-		mover.speed.y = 0;
-	}
-	// check if he collided with the left
-	if ( (mover.x < block.x+block.w) && (mover.last_x >= block.x+block.w) ) {
-		mover.x = block.x + block.w;
-		mover.speed.y = 0;
-	}
-	
-	return true;
-}
-
-// pushblockCollision(): check collisions with push blocks.
-// Squarely is blocked by them if smaller, can push them if >= in size.
-// KLUDGE: Without Math.floor, Squarely may pass through. Still may 
-// happen, but happens less often. 
-function pushblockCollision(mover,block) {
-	if(block.w !== Infinity && mover.w !== Infinity) {
-		if (isNaN(mover.w) || isNaN(block.w) || block.x > (mover.w+mover.x) || mover.x > (block.w+block.x) )
-			return false;
-		if (isNaN(mover.h) || isNaN(block.h) || block.y > (mover.h+mover.y) || mover.y > (block.h+block.y) )
-			return false;
-	}
-	// calculate once if he is bigger than the target pushblock
-	let bigger = (mover.w * mover.h) >= (block.w *block.h);
-	// check if he collided with the top
-	if ( (mover.y+mover.h > block.y) && (mover.last_y+mover.h <= block.y) ) {
-		if (bigger) {
-			block.y = mover.y + mover.h;
-		} else {
-			mover.y = block.y - mover.h;
-			mover.speed.y = 0;
-		}
-	}
-	// check if he collided with the right
-	if ( (mover.x+mover.w > block.x) && (mover.last_x+mover.w <= block.x) ) {
-		if (bigger) {
-			block.x = mover.x + mover.w;
-		} else {
-			mover.x = block.x - mover.w;
-			mover.speed.x = 0;
-		}
-	}
-	// check if he collided with the bottom
-	if ( (mover.y < block.y+block.h) && (mover.last_y >= block.y+block.h) ) {
-		if (bigger) {
-			block.y = Math.floor(mover.y - block.h);
-		} else {
-			mover.y = block.y + block.h;
-			mover.speed.y = 0;
-		}
-	}
-	// check if he collided with the left
-	if ( (mover.x < block.x+block.w) && (mover.last_x >= block.x+block.w) ) {
-		if (bigger) {
-			block.x = Math.floor(mover.x - block.w);
-		} else {
-			mover.x = block.x + block.w;
-			mover.speed.y = 0;
-		}		
-	}
-	return true;
 }
 
 function changeColor(obj) {
@@ -363,7 +263,7 @@ function changeSize(Squarely,block) {
 		// don't let Squarely grow through blocks
 		// check collisions with blocks
 		for (let i = 0; i < Blocks.length; i++) {
-			if (blockCollision(Squarely,Blocks[i])) {
+			if (Physics.blockCollision(Squarely,Blocks[i])) {
 				Squarely.h -= 1;
 			}
 		}
@@ -379,7 +279,7 @@ function changeSize(Squarely,block) {
 		// don't let Squarely grow through blocks
 		// check collisions with blocks
 		for (let i = 0; i < Blocks.length; i++) {
-			if (blockCollision(Squarely,Blocks[i])) {
+			if (Physics.blockCollision(Squarely,Blocks[i])) {
 				Squarely.w -= 1;
 			}
 		}
