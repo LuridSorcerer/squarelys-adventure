@@ -214,12 +214,6 @@ function render() {
 	Screen.drawObject(Squarely, "rgb("+Squarely.color.r+","+Squarely.color.g+","+Squarely.color.b+")");
 	
 	// write message of whatever NPC is being collided with
-	//for (let i=0; i<Npcs.length; ++i) {
-	//	if(Physics.boxCollision(Squarely,Npcs[i])){
-	//		Screen.drawMessage(Npcs[i]);
-	//		break;
-	//	}
-	//}
 	Npcs.forEach( (n) => {
 		if ( Physics.boxCollision(Squarely,n) ) {
 			Screen.drawMessage(n);
