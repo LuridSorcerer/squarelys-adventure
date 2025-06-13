@@ -109,7 +109,7 @@ function update() {
 	
 	// check for collisions with doors
 	Doors.forEach( (d,i) => {
-		if ( Physics.boxCollision(Squarely,d) && Squarely.keys > 0) {
+		if ( Physics.blockCollision(Squarely,d) && Squarely.keys > 0) {
 			Squarely.keys--;
 			Doors.splice(i,1);
 		}
