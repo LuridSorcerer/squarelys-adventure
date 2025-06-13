@@ -91,7 +91,12 @@ function update() {
 
 	// check collisions with pushable blocks
 	Pushblocks.forEach( (p) => {
-		Physics.pushblockCollision(Squarely,p);
+		//Physics.pushblockCollision(Squarely,p);
+		if (Squarely.w * Squarely.h >= p.w * p.h) {
+			Physics.blockCollision(p,Squarely);
+		} else {
+			Physics.blockCollision(Squarely,p);
+		}
 	});
 	
 	// check collisions with keys

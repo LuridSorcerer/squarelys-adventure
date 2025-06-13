@@ -20,80 +20,46 @@ export const Physics = {
 		return true;
 	},
 
-	// blockCollision(): If collision occured, eject the mover from the
-	// block. Push them to the edge of the block based on the direction
-	// they were moving.
-	blockCollision: function (mover,block) {
-		// if no collision happened, no need to proceed
-		if( !this.boxCollision(mover,block) ) { return false; }
-		// check if he collided with the top
-		if ( (mover.y+mover.h > block.y) && (mover.last_y+mover.h <= block.y) ) {
-			mover.y = block.y - mover.h;
-			mover.speed.y = 0;
-		}
-		// check if he collided with the right
-		if ( (mover.x+mover.w > block.x) && (mover.last_x+mover.w <= block.x) ) {
-			mover.x = block.x - mover.w;
-			mover.speed.x = 0;
-		}
-		// check if he collided with the bottom
-		if ( (mover.y < block.y+block.h) && (mover.last_y >= block.y+block.h) ) {
-			mover.y = block.y + block.h;
-			mover.speed.y = 0;
-		}
-		// check if he collided with the left
-		if ( (mover.x < block.x+block.w) && (mover.last_x >= block.x+block.w) ) {
-			mover.x = block.x + block.w;
-			mover.speed.y = 0;
-		}
-		return true;
-	},
+	// blockCollision: calculcate the minimum translation vector to determine
+	// from which side the collision occured. Use this vector to eject the 
+	// mover from the block.
+	blockCollision: function (mover, block) {
+		// calculate the center points of both objects
+		const moverCenter = {x: mover.x + mover.w / 2, y: mover.y + mover.h / 2};
+		const blockCenter = {x: block.x + block.w / 2, y: block.y + block.h / 2}; 
 
-	// pushblockCollision(): check collisions with push blocks.
-	// Mover is blocked by them if smaller, can push them if >= in size.
-	// KLUDGE: Sometimes clips through block when pushing up or left, 
-	// added a buffer but it still sometimes happens
-	pushblockCollision: function (mover,block) {
-		// if no collision happened, no need to proceed
-		if( !this.boxCollision(mover,block) ) { return false; }
-		// calculate once if he is bigger than the target pushblock
-		let bigger = (mover.w * mover.h) >= (block.w * block.h);
-		// check if he collided with the top
-		if ( (mover.y+mover.h > block.y) && (mover.last_y+mover.h <= block.y) ) {
-			if (bigger) {
-				block.y = mover.y + mover.h;
+		// get the difference between the two center points
+		const diff = {x: moverCenter.x - blockCenter.x, y: moverCenter.y - blockCenter.y };
+
+		// calculate how close the centers need to be for an overlap to occur
+		const totalHalfWidth = (mover.w + block.w) / 2;
+		const totalHalfHeight = (mover.h + block.h) / 2;
+
+		// check for overlap
+		if( Math.abs(diff.x) < totalHalfWidth && Math.abs(diff.y) < totalHalfHeight ) {
+			const overlap = {x: totalHalfWidth - Math.abs(diff.x), y: totalHalfHeight - Math.abs(diff.y)};
+			// determine on which axis the overlap is smaller and resolve that one
+			if (overlap.x < overlap.y) {
+				// if the mover has a speed property, stop it
+				if('speed' in mover) { mover.speed.x = 0; }
+				if (diff.x > 0) {
+					mover.x += overlap.x;
+					return "left";
+				} else {
+					mover.x -= overlap.x;
+					return "right";
+				}
 			} else {
-				mover.y = block.y - mover.h;
-				mover.speed.y = 0;
+				if('speed' in mover) { mover.speed.y = 0; }
+				if (diff.y > 0) {
+					mover.y += overlap.y;
+					return "top";
+				} else {
+					mover.y -= overlap.y;
+					return "bottom";
+				}
 			}
 		}
-		// check if he collided with the right
-		if ( (mover.x+mover.w > block.x) && (mover.last_x+mover.w <= block.x) ) {
-			if (bigger) {
-				block.x = mover.x + mover.w;
-			} else {
-				mover.x = block.x - mover.w;
-				mover.speed.x = 0;
-			}
-		}
-		// check if he collided with the bottom
-		if ( (mover.y < block.y+block.h) && (mover.last_y >= block.y+block.h) ) {
-			if (bigger) {
-				block.y = Math.floor(mover.y - block.h);
-			} else {
-				mover.y = block.y + block.h;
-				mover.speed.y = 0;
-			}
-		}
-		// check if he collided with the left
-		if ( (mover.x < block.x+block.w) && (mover.last_x >= block.x+block.w) ) {
-			if (bigger) {
-				block.x = Math.floor(mover.x - block.w);
-			} else {
-				mover.x = block.x + block.w;
-				mover.speed.y = 0;
-			}		
-		}
-		return true;
+		return null;
 	}
 };
