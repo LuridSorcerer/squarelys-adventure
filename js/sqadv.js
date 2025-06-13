@@ -78,78 +78,64 @@ function update() {
 	Physics.moveObject(Squarely,Time.delta);
 	
 	// check collisions with blocks
-	for (let i = 0; i < Blocks.length; i++) {
-		if (Physics.blockCollision(Squarely,Blocks[i])) { }
-	}
+	Blocks.forEach( (b) => {
+		Physics.blockCollision(Squarely,b); 
+	});
 
 	// if touching a green block, change size
-	for (let i = 0; i < Morphblocks.length; i++) {
-		if (Physics.blockCollision(Squarely,Morphblocks[i])) {
-			changeSize(Squarely,Morphblocks[i]);
+	Morphblocks.forEach( (m) => {
+		if ( Physics.blockCollision(Squarely,m) ) {
+			changeSize(Squarely,m);
 		}
-	}
+	});
 
-	// check collisions with blocks
-	for (let i = 0; i < Pushblocks.length; i++) {
-		if (Physics.pushblockCollision(Squarely,Pushblocks[i])) { }
-	}	
+	// check collisions with pushable blocks
+	Pushblocks.forEach( (p) => {
+		Physics.pushblockCollision(Squarely,p);
+	});
 	
 	// check collisions with keys
-	for (let i = 0; i < Keys.length; i++) {
-		// if touching a key
-		if (Physics.boxCollision(Squarely,Keys[i])){
-			// add a key to the inventory
+	Keys.forEach( (k,i) => {
+		if ( Physics.boxCollision(Squarely,k) ) {
 			Squarely.keys++;
-			// delete the key
 			Keys.splice(i,1);
 		}
-	}
+	});
 	
 	// check for collisions with doors
-	for (let i=0; i<Doors.length; i++) {
-		// if touching a door
-		if (Physics.blockCollision(Squarely,Doors[i])){
-			// if you have a key...
-			if (Squarely.keys > 0) { 
-				// lose a key
-				Squarely.keys--;
-				// open the door
-				Doors.splice(i,1);
-			}
+	Doors.forEach( (d,i) => {
+		if ( Physics.boxCollision(Squarely,d) && Squarely.keys > 0) {
+			Squarely.keys--;
+			Doors.splice(i,1);
 		}
-	}
+	});
 	
 	// update NPCs
-	for (let i=0; i<Npcs.length; ++i) {
-		if (Physics.boxCollision(Screen.camera,Npcs[i]) ) {
-			changeColor(Npcs[i]);
-		}
-	}
+	Npcs.forEach( (n) => {
+		changeColor(n);
+	});
 	
 	// check for collisions with teleporters
-	for (let i=0; i<Teleporters.length; ++i) {
-		if (Physics.blockCollision(Squarely,Teleporters[i])){
+	Teleporters.forEach( (t) => {
+		if ( Physics.blockCollision(Squarely,t) ){
 			// reset Squareley's position
-			Squarely.x = Teleporters[i].move.x;
-			Squarely.y = Teleporters[i].move.y;
+			Squarely.x = t.move.x;
+			Squarely.y = t.move.y;
 			// transport to the new area
-			if (Teleporters[i].target === 1) {
+			if (t.target === 1) {
 				changeArea("data/area1.json");
-				break;
 			}
-			if (Teleporters[i].target === 2) {
+			else if (t.target === 2) {
 				changeArea("data/area2.json");
-				break;
 			}
-			if (Teleporters[i].target === 3) {
+			else if (t.target === 3) {
 				changeArea("data/area3.json");
-				break;
 			}
 			else {
 				changeArea("data/the_end.json");
 			}
 		}
-	}
+	});
 	
 	// move camera
 	Screen.moveCamera(Squarely);
