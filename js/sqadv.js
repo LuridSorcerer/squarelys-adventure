@@ -162,64 +162,69 @@ function render() {
 	Screen.clear();
 
 	// draw doors
-	for (let i=0; i<Doors.length; ++i){
-		if (Physics.boxCollision(Screen.camera,Doors[i]) ) {
-			Screen.drawObject(Doors[i], "rgb(0,0,255)");
+	Doors.forEach( (d) => {
+		if ( Physics.boxCollision(Screen.camera,d) ) {
+			Screen.drawObject(d, "rgb(0,0,255");
 		}
-	}	
+	} );
 	
 	// draw blocks
-	for (let i=0; i<Blocks.length; ++i) {
-		if (Physics.boxCollision(Screen.camera,Blocks[i]) ) {
-			Screen.drawObject(Blocks[i], "rgb(0,0,0)");
+	Blocks.forEach( (b) => {
+		if ( Physics.boxCollision(Screen.camera,b) ) {
+			Screen.drawObject(b, "rgb(0,0,0");
 		}
-	}
-	
+	});
+
 	// draw NPCs
-	for (let i=0; i<Npcs.length; ++i) {
-		if (Physics.boxCollision(Screen.camera,Npcs[i]) ) {
-			Screen.drawObject(Npcs[i], "rgb("+Npcs[i].color.r+","+Npcs[i].color.g+","+Npcs[i].color.b+")");
+	Npcs.forEach( (n) => {
+		if ( Physics.boxCollision(Screen.camera, n) ) {
+			Screen.drawObject(n, "rgb("+n.color.r+","+n.color.g+","+n.color.b+")");
 		}
-	}
+	});
 	
 	// draw Keys
-	for (let i=0; i<Keys.length; ++i) {
-		if (Physics.boxCollision(Screen.camera,Keys[i]) ) {
-			Screen.drawObject(Keys[i], "rgb(255,255,0)");
+	Keys.forEach( (k) => {
+		if ( Physics.boxCollision(Screen.camera, k) ) {
+			Screen.drawObject(k, "rgb(255,255,0)");
 		}
-	}
+	});
 
 	// draw Teleporters
-	for (let i=0; i<Teleporters.length; ++i) {
-		if (Physics.boxCollision(Screen.camera,Teleporters[i]) ) {
-			Screen.drawObject(Teleporters[i], "rgb(255,255,255)");
+	Teleporters.forEach( (t) => {
+		if ( Physics.boxCollision(Screen.camera,t) ) {
+			Screen.drawObject(t, "rgb(255,255,255");
 		}
-	}
+	});
 
 	// draw pushable blocks
-	for (let i=0; i<Pushblocks.length; ++i) {
-		if (Physics.boxCollision(Screen.camera,Pushblocks[i]) ) {
-			Screen.drawObject(Pushblocks[i], "rgb(255,0,255)");
+	Pushblocks.forEach( (p) => {
+		if ( Physics.boxCollision(Screen.camera,p) ) {
+			Screen.drawObject(p, "rgb(255,0,255)");
 		}
-	}
+	});
 
 	// draw morph blocks
-	for (let i=0; i<Morphblocks.length; ++i) {
-		if (Physics.boxCollision(Screen.camera,Morphblocks[i]) ) {
-			Screen.drawObject(Morphblocks[i], "rgb(0,255,0)");
+	Morphblocks.forEach( (m) => {
+		if ( Physics.boxCollision(Screen.camera,m) ) {
+			Screen.drawObject(m, "rgb(0,255,0)");
 		}
-	}
+	});
 
 	// draw Squarely
 	Screen.drawObject(Squarely, "rgb("+Squarely.color.r+","+Squarely.color.g+","+Squarely.color.b+")");
 	
 	// write message of whatever NPC is being collided with
-	for (let i=0; i<Npcs.length; ++i) {
-		if(Physics.boxCollision(Squarely,Npcs[i])){
-			Screen.drawMessage(Npcs[i]);
-			break;
+	//for (let i=0; i<Npcs.length; ++i) {
+	//	if(Physics.boxCollision(Squarely,Npcs[i])){
+	//		Screen.drawMessage(Npcs[i]);
+	//		break;
+	//	}
+	//}
+	Npcs.forEach( (n) => {
+		if ( Physics.boxCollision(Squarely,n) ) {
+			Screen.drawMessage(n);
 		}
-	}
+	});
 
 	// Print keys held (only if any are picked up)
 	Screen.bufferCtx.fillStyle = "rgb(0,0,0)";
