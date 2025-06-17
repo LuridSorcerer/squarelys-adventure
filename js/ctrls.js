@@ -46,12 +46,15 @@ export const Ctrls = {
 		// add event listeners for touch input
 		window.addEventListener('touchstart',
 			function(event) { 
-				event.button = 1;
+				event.buttons = 1;
 				Ctrls.mouseBtn(event);
 			}, false);
 		window.addEventListener('touchmove',
 			function(event) {
-				console.log(event);
+				//console.log(event);
+				event.clientX = event.touches[0].screenX;
+				event.clientY = event.touches[0].screenY;
+				Ctrls.onMouseMove(event);
 			}, false);
 	},
 	
@@ -78,3 +81,4 @@ export const Ctrls = {
 		this.mouse.b = event.buttons;
 	},
 };
+
