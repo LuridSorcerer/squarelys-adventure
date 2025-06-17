@@ -243,40 +243,41 @@ function changeColor(obj) {
 	
 }
 
+// changeSize(): Change Squarely's size to get closer to target block's
+// size. Adjusts his position to keep him centered. 
 function changeSize(Squarely,block) {
-	
-	// change Squarely's height closer to the block's height
-	if (block.h > Squarely.h) {
-		Squarely.h += 1;
-		/* KLUDGE: Prevent him from passing through blocks while growing */
-		if (Squarely.y < block.y) { Squarely.y--; }
-		// don't let Squarely grow through blocks
-		// check collisions with blocks
-		for (let i = 0; i < Blocks.length; i++) {
-			if (Physics.blockCollision(Squarely,Blocks[i])) {
-				Squarely.h -= 1;
-			}
-		}
-	} else if (block.h < Squarely.h) {
-		Squarely.h -= 1;
-	} 
-	
-	// change Squarely's width closer to the block's width
-	if (block.w > Squarely.w) {
-		Squarely.w += 1;
-		/* KLUDGE: Prevent him from passing through blocks */
-		if (Squarely.x < block.x) { Squarely.x--; }
-		// don't let Squarely grow through blocks
-		// check collisions with blocks
-		for (let i = 0; i < Blocks.length; i++) {
-			if (Physics.blockCollision(Squarely,Blocks[i])) {
-				Squarely.w -= 1;
-			}
-		}
-	} else if (block.w < Squarely.w) {
-		Squarely.w -= 1;
+	const GROW_RATE = 100;
+
+	// change Squarely's height
+	// if it's close, just make it snap to the same value
+	if ( Math.abs(Squarely.h - block.h) < 1 ) {
+		Squarely.h = block.h;
+	}
+	// if Squarely is smaller, grow him
+	else if ( Squarely.h < block.h ) {
+		Squarely.h += GROW_RATE * Time.delta / 1000;
+		Squarely.x -= GROW_RATE * Time.delta / 1000 / 2;
+		
+	} // if Squarely is bigger, shrink him
+	else if ( Squarely.h > block.h ) {
+		Squarely.h -= GROW_RATE * Time.delta / 1000; 
+		Squarely.x += GROW_RATE * Time.delta / 1000 / 2;
 	}
 	
+	// change Squarely's width
+	// if it's close, just make it snap to the same value
+	if ( Math.abs(Squarely.w - block.w) < 1 ) {
+		Squarely.w = block.w;
+	}
+	// if Squarely is smaller, grow him
+	else if ( Squarely.w < block.w ) {
+		Squarely.w += GROW_RATE * Time.delta / 1000; 
+		Squarely.y -= GROW_RATE * Time.delta / 1000 / 2;
+	} // if Squarely is bigger, shrink him
+	else if ( Squarely.h > block.h ) {
+		Squarely.w -= GROW_RATE * Time.delta / 1000; 
+		Squarely.y += GROW_RATE * Time.delta / 1000 / 2;
+	}	
 }
 
 // changeArea(): Load a new area, specify a JSON containing the level 
