@@ -3,8 +3,6 @@ export const Physics = {
 	// moveObject(): Move an object based on its current speed. Pass in
 	// the object to be moved and the time delta in milliseconds. 
 	moveObject: function (obj,delta) {
-		obj.last_x = obj.x;
-		obj.last_y = obj.y;
 		obj.x += obj.speed.x * delta / 1000;
 		obj.y += obj.speed.y * delta / 1000;
 	},

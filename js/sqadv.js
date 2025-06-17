@@ -14,20 +14,13 @@ const Morphblocks = [];
 
 // Squarely, the main character
 const Squarely = {
-	x: 0,
+	x: 0, 
 	y: 0,
 	h: 16,
 	w: 16,
-	last_x: 0,
-	last_y: 0,
 	color: {r:64,g:64,b:64},
-	MAXH: 32,
-	MAXW: 32,
-	MINH:  8,
-	MINW:  8,
 	COLORCHANGE:  {r:5, g:0, b:0 },
 	speed: {x:0, y:0 },
-	max_speed: 100,
 	keys: 0,
 };
 
