@@ -14,6 +14,8 @@ export const Ctrls = {
 	
 	KEY_RETURN: 13,
 	
+	mouse: {x: 0, y: 0, b:0 },
+	
 	init: function() {
 		this._pressed[this.UP] = 0;
 		this._pressed[this.DOWN] = 0;
@@ -29,6 +31,17 @@ export const Ctrls = {
 		window.addEventListener('keyup',function(event) {Ctrls.onKeyUp(event); }, false);
 		window.addEventListener('keydown',function(event) {Ctrls.onKeyDown(event); }, false);
 		window.addEventListener('blur',function(){Ctrls.init();},false);
+		
+		// add listeners for mouse input
+		window.addEventListener('mousemove', 
+			function(event) { Ctrls.onMouseMove(event); }, 
+			false);
+		window.addEventListener('mousedown',
+			function(event) { Ctrls.mouseBtn(event); },
+			false);
+		window.addEventListener('mouseup',
+			function(event) { Ctrls.mouseBtn(event); },
+			false);
 	},
 	
 	isDown: function(keyCode) {
@@ -45,4 +58,12 @@ export const Ctrls = {
 		this._pressed[event.keyCode] = 0;
 	},
 	
+	onMouseMove: function(event) {
+		this.mouse.x = event.clientX / window.innerWidth; 
+		this.mouse.y = event.clientY / window.innerHeight;
+	},
+
+	mouseBtn: function(event) {
+		this.mouse.b = event.buttons;
+	},
 };

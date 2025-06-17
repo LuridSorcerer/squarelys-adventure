@@ -211,6 +211,15 @@ function render() {
 		Screen.bufferCtx.fillText("Keys:"+Squarely.keys, 10, 40);
 	}
 
+	// draw mouse location
+	if (Ctrls.mouse.b === 1) {
+	Screen.bufferCtx.fillStyle = "red";
+	Screen.bufferCtx.fillRect( 
+		(Ctrls.mouse.x * Screen.buffer.width), 
+		(Ctrls.mouse.y * Screen.buffer.height), 
+		8, 8 );
+	} 
+
 	// draw the offscreen canvas to the onscreen one
 	Screen.canvasCtx.drawImage(
 		Screen.buffer,0,0,Screen.buffer.width,Screen.buffer.height,
