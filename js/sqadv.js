@@ -224,23 +224,25 @@ function render() {
 		0,0,Screen.canvas.width,Screen.canvas.height);
 }
 
+// changeColor(): Change the color of an NPC based on its own color 
+// change parameter and frame rate. 
 function changeColor(obj) {
-
+	const CHANGE_RATE = 100;
+	
 	// change red
-	obj.color.r += obj.COLORCHANGE.r;
-	if (obj.color.r < 1) {obj.COLORCHANGE.r *= -1; obj.color.r=0; }
-	if (obj.color.r > 255) { obj.COLORCHANGE.r *= -1; obj.color.r=255;}
+	obj.color.r += obj.COLORCHANGE.r * CHANGE_RATE * Time.delta / 1000;
+	if(obj.color.r < 1)   { obj.COLORCHANGE.r *= -1; obj.color.r = 0; }
+	if(obj.color.r > 255) { obj.COLORCHANGE.r *= -1; obj.color.r = 255; }
 	
 	// change green
-	obj.color.g += obj.COLORCHANGE.g;
-	if (obj.color.g < 1) {obj.COLORCHANGE.g *= -1; obj.color.g=0; }
-	if (obj.color.g > 255) { obj.COLORCHANGE.g *= -1; obj.color.g=255;}
+	obj.color.g += obj.COLORCHANGE.g * CHANGE_RATE * Time.delta / 1000;
+	if(obj.color.g < 1)   { obj.COLORCHANGE.g *= -1; obj.color.g = 0; }
+	if(obj.color.g > 255) { obj.COLORCHANGE.g *= -1; obj.color.g = 255; }
 	
 	// change blue
-	obj.color.b += obj.COLORCHANGE.b;
-	if (obj.color.b < 1) {obj.COLORCHANGE.b *= -1; obj.color.b=0; }
-	if (obj.color.b > 255) { obj.COLORCHANGE.b *= -1; obj.color.b=255;}
-	
+	obj.color.b += obj.COLORCHANGE.b * CHANGE_RATE * Time.delta / 1000;
+	if(obj.color.b < 1)   { obj.COLORCHANGE.b *= -1; obj.color.b = 0; }
+	if(obj.color.b > 255) { obj.COLORCHANGE.b *= -1; obj.color.b = 255; }
 }
 
 // changeSize(): Change Squarely's size to get closer to target block's
