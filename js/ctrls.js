@@ -42,6 +42,17 @@ export const Ctrls = {
 		window.addEventListener('mouseup',
 			function(event) { Ctrls.mouseBtn(event); },
 			false);
+			
+		// add event listeners for touch input
+		window.addEventListener('touchstart',
+			function(event) { 
+				event.button = 1;
+				Ctrls.mouseBtn(event);
+			}, false);
+		window.addEventListener('touchmove',
+			function(event) {
+				console.log(event);
+			}, false);
 	},
 	
 	isDown: function(keyCode) {
