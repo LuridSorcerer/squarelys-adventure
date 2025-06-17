@@ -258,8 +258,7 @@ function changeSize(Squarely,block) {
 	// if Squarely is smaller, grow him
 	else if ( Squarely.h < block.h ) {
 		Squarely.h += GROW_RATE * Time.delta / 1000;
-		Squarely.x -= GROW_RATE * Time.delta / 1000 / 2;
-		
+		Squarely.y -= GROW_RATE * Time.delta / 1000 / 2;
 	} // if Squarely is bigger, shrink him
 	else if ( Squarely.h > block.h ) {
 		Squarely.h -= GROW_RATE * Time.delta / 1000; 
@@ -274,11 +273,11 @@ function changeSize(Squarely,block) {
 	// if Squarely is smaller, grow him
 	else if ( Squarely.w < block.w ) {
 		Squarely.w += GROW_RATE * Time.delta / 1000; 
-		Squarely.y -= GROW_RATE * Time.delta / 1000 / 2;
+		Squarely.x -= GROW_RATE * Time.delta / 1000 / 2;
 	} // if Squarely is bigger, shrink him
-	else if ( Squarely.h > block.h ) {
+	else if ( Squarely.w > block.w ) {
 		Squarely.w -= GROW_RATE * Time.delta / 1000; 
-		Squarely.y += GROW_RATE * Time.delta / 1000 / 2;
+		Squarely.x += GROW_RATE * Time.delta / 1000 / 2;
 	}	
 }
 
@@ -319,7 +318,7 @@ function changeArea( filename ) {
 function gameLoop() {
 	update();
 	render();
-	window.requestAnimationFrame(gameLoop)
+	window.requestAnimationFrame(gameLoop);
 }
 
 // ready to start!
