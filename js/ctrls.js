@@ -17,20 +17,13 @@ export const Ctrls = {
 	mouse: {x: 0, y: 0, b:0 },
 	
 	init: function() {
-		this._pressed[this.UP] = 0;
-		this._pressed[this.DOWN] = 0;
-		this._pressed[this.LEFT] = 0;
-		this._pressed[this.RIGHT] = 0;
-		this._pressed[this.KEY_W] = 0;
-		this._pressed[this.KEY_A] = 0;
-		this._pressed[this.KEY_S] = 0;
-		this._pressed[this.KEY_D] = 0;
-		this._pressed[this.KEY_RETURN] = 0;
+
+		// initialize buttons and mouse inputs
+		this.reset();
 
 		// add listeners for keyboard input
 		window.addEventListener('keyup',function(event) {Ctrls.onKeyUp(event); }, false);
 		window.addEventListener('keydown',function(event) {Ctrls.onKeyDown(event); }, false);
-		//window.addEventListener('blur',function(){Ctrls.init();},false);
 		
 		// add listeners for mouse input
 		window.addEventListener('mousemove', 
@@ -67,7 +60,24 @@ export const Ctrls = {
 				Ctrls.onMouseMove(event);
 			}, false);
 	},
-	
+
+	reset: function() {
+		// initialize the buttons
+		this._pressed[this.UP] = 0;
+		this._pressed[this.DOWN] = 0;
+		this._pressed[this.LEFT] = 0;
+		this._pressed[this.RIGHT] = 0;
+		this._pressed[this.KEY_W] = 0;
+		this._pressed[this.KEY_A] = 0;
+		this._pressed[this.KEY_S] = 0;
+		this._pressed[this.KEY_D] = 0;
+		this._pressed[this.KEY_RETURN] = 0;
+		// initialize the touch/mouse inputs
+		this.mouse.x = 0;
+		this.mouse.y = 0;
+		this.mouse.b = 0;
+	},
+
 	isDown: function(keyCode) {
 		return this._pressed[keyCode];
 	},

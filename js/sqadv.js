@@ -54,7 +54,11 @@ function init() {
 	window.addEventListener("resize",Screen.resize);
 	
 	// pause game if focus is lost
-	window.addEventListener("blur", function() { paused = true; });
+	window.addEventListener("blur", function() { 
+		Ctrls.reset();
+		Target.active = false;
+		paused = true; 
+	});
 	window.addEventListener("focus", function() { paused = false; });
 	
 	// move to the first area
