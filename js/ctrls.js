@@ -37,10 +37,10 @@ export const Ctrls = {
 			function(event) { Ctrls.onMouseMove(event); }, 
 			false);
 		window.addEventListener('mousedown',
-			function(event) { Ctrls.mouseBtn(event); },
+			function(event) { Ctrls.onMouseBtn(event); },
 			false);
 		window.addEventListener('mouseup',
-			function(event) { Ctrls.mouseBtn(event); },
+			function(event) { Ctrls.onMouseBtn(event); },
 			false);
 			
 		// add event listeners for touch input
@@ -77,7 +77,7 @@ export const Ctrls = {
 		this.mouse.y = event.clientY / window.innerHeight;
 	},
 
-	mouseBtn: function(event) {
+	onMouseBtn: function(event) {
 		this.mouse.b = event.buttons;
 	},
 };

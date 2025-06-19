@@ -2,6 +2,7 @@ import { Time } from './time.js';
 import { Ctrls } from './ctrls.js';
 import { Screen } from './screen.js';
 import { Physics } from './physics.js';
+import { Vector2d } from './vector2d.js';
 
 // create arrays to store the game state
 const Blocks = [];
@@ -29,6 +30,8 @@ const Squarely = {
 const Target = {
 	x: 0,
 	y: 0,
+	w: 1,
+	h: 1,
 	active: false
 };
 
@@ -76,17 +79,30 @@ function update() {
 	if (Ctrls.isDown(Ctrls.RIGHT) !== 0 || Ctrls.isDown (Ctrls.KEY_D) !== 0) {
 		Squarely.speed.x = 100;
 	}
-	Physics.moveObject(Squarely,Time.delta);
-	
+
 	// update mouse/touch target
 	if (Ctrls.mouse.b === 1) {
 		Target.x = Ctrls.mouse.x * Screen.buffer.width + Screen.camera.x;
 		Target.y = Ctrls.mouse.y * Screen.buffer.height + Screen.camera.y;
+		Target.active = true;
 	}
+	
+	// move Squarely toward the target if it's active
+	if (Target.active) {
+		Squarely.speed.x = Target.x - Squarely.x;
+		Squarely.speed.y = Target.y - Squarely.y;
+		Vector2d.normalize(Squarely.speed);
+		if (Physics.boxCollision(Squarely,Target)) { Target.active = false; }
+	}
+	
+	// apply Squarely's movement
+	Physics.moveObject(Squarely,Time.delta);
 	
 	// check collisions with blocks
 	Blocks.forEach( (b) => {
-		Physics.blockCollision(Squarely,b); 
+		if ( Physics.blockCollision(Squarely,b) ) {
+			Target.active = false;
+		}
 	});
 
 	// if touching a green block, change size
@@ -226,8 +242,9 @@ function render() {
 	}
 
 	// draw mouse/touch target
-	Screen.bufferCtx.fillStyle = "red";
-	Screen.drawObject( {x:Target.x, y:Target.y, w:8, h:8} );
+	if (Target.active) { Screen.bufferCtx.fillStyle = "red"; }
+	else { Screen.bufferCtx.fillStyle = "darkgray"; }
+	Screen.drawObject( Target );
 	Screen.bufferCtx.fillText("Target:"+Target.x+","+Target.y, 10, 80);
 
 	// draw the offscreen canvas to the onscreen one
@@ -324,6 +341,8 @@ function changeArea( filename ) {
 		console.log("Failed to load level: " + error);
 	});
 
+	// disable movement target
+	Target.active = false;
 }
 
 // gameLoop: performs the game loop
@@ -336,3 +355,4 @@ function gameLoop() {
 // ready to start!
 init();
 window.requestAnimationFrame(gameLoop);
+
