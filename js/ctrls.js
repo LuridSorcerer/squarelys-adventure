@@ -47,7 +47,10 @@ export const Ctrls = {
 		window.addEventListener('touchstart',
 			function(event) { 
 				event.buttons = 1;
+				event.clientX = event.touches[0].clientX;
+				event.clientY = event.touches[0].clientY;
 				Ctrls.onMouseBtn(event);
+				Ctrls.onMouseMove(event);
 			}, false);
 		window.addEventListener('touchend',
 			function(event) {

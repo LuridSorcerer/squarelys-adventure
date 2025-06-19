@@ -253,9 +253,6 @@ function render() {
 	if (Target.active) { Screen.bufferCtx.fillStyle = "red"; }
 	else { Screen.bufferCtx.fillStyle = "darkgray"; }
 	Screen.drawObject( Target );
-	Screen.bufferCtx.fillText("Target:"+Target.x+","+Target.y, 10, 80);
-	Screen.bufferCtx.fillText("Speed:"+Squarely.speed.x+","+Squarely.speed.y,10,100);
-	Screen.bufferCtx.fillText("Max speed:"+Squarely.speed.max,10,120);
 
 	// draw the offscreen canvas to the onscreen one
 	Screen.canvasCtx.drawImage(
@@ -365,4 +362,3 @@ function gameLoop() {
 // ready to start!
 init();
 window.requestAnimationFrame(gameLoop);
-
