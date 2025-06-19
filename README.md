@@ -3,20 +3,23 @@
 
 ## How To Run
 
-The game can be played in any modern web browser, but must be hosted by a web server. It is not sufficient to open the index.html file using the file:// protocol. 
+The game can be played directly in a browser using [Github Pages](https://luridsorcerer.github.io/squarelys-adventure/).
 
-The game can be played directly on Github using [Github Pages](https://luridsorcerer.github.io/squarelys-adventure/).
-
-For local testing, I use the simple HTTP server provided by Python.
+For locally hosting the game, opening index.html in your browser using
+the file:// protocol will not work. For local testing, I use the HTTP
+server module provided by Python.
 
 ~~~
 cd squarelys-adventure
 python3 -m http.server 8080
 ~~~
 
+Any basic HTTP server that can serve static pages should be sufficient. 
+
 ## How To Play
 
-Move using WASD or the arrow keys.
+Move using WASD or the arrow keys. Mouse and touch control are also 
+supported.
 
 Blocks interact with Squarely based on their color:
 - Black blocks are walls that cannot be moved or passed through.
@@ -30,11 +33,6 @@ Blocks interact with Squarely based on their color:
 - White blocks are teleporters that will move Squarely to a new area. 
 
 ## Goals
-- Mouse controls
-- Touch controls
-- Bug fixes
-	- Can get stuck on corners
-	- Can sometimes clip through pushblocks
 - Pushblock collision against walls
 - Finish pushblock demo area
 - level editor
