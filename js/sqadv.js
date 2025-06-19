@@ -13,6 +13,8 @@ const Teleporters = [];
 const Pushblocks = [];
 const Morphblocks = [];
 
+let paused = false;
+
 // Squarely, the main character
 const Squarely = {
 	x: 0, 
@@ -50,6 +52,10 @@ function init() {
 	// resize the canvas
 	Screen.resize();
 	window.addEventListener("resize",Screen.resize);
+	
+	// pause game if focus is lost
+	window.addEventListener("blur", function() { paused = true; });
+	window.addEventListener("focus", function() { paused = false; });
 	
 	// move to the first area
 	changeArea("data/area1.json");
@@ -354,7 +360,7 @@ function changeArea( filename ) {
 
 // gameLoop: performs the game loop
 function gameLoop() {
-	update();
+	if (!paused) { update(); }
 	render();
 	window.requestAnimationFrame(gameLoop);
 }
