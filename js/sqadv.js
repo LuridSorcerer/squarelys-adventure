@@ -24,6 +24,14 @@ const Squarely = {
 	keys: 0,
 };
 
+// Target: A target placed by mouse or touch inputs, Squarely will
+// move toward it if it's active
+const Target = {
+	x: 0,
+	y: 0,
+	active: false
+};
+
 // init: initializes the game
 function init() {
 
@@ -69,6 +77,12 @@ function update() {
 		Squarely.speed.x = 100;
 	}
 	Physics.moveObject(Squarely,Time.delta);
+	
+	// update mouse/touch target
+	if (Ctrls.mouse.b === 1) {
+		Target.x = Ctrls.mouse.x * Screen.buffer.width + Screen.camera.x;
+		Target.y = Ctrls.mouse.y * Screen.buffer.height + Screen.camera.y;
+	}
 	
 	// check collisions with blocks
 	Blocks.forEach( (b) => {
@@ -211,14 +225,10 @@ function render() {
 		Screen.bufferCtx.fillText("Keys:"+Squarely.keys, 10, 40);
 	}
 
-	// draw mouse location
-	if (Ctrls.mouse.b === 1) {
+	// draw mouse/touch target
 	Screen.bufferCtx.fillStyle = "red";
-	Screen.bufferCtx.fillRect( 
-		(Ctrls.mouse.x * Screen.buffer.width), 
-		(Ctrls.mouse.y * Screen.buffer.height), 
-		8, 8 );
-	} 
+	Screen.drawObject( {x:Target.x, y:Target.y, w:8, h:8} );
+	Screen.bufferCtx.fillText("Target:"+Target.x+","+Target.y, 10, 80);
 
 	// draw the offscreen canvas to the onscreen one
 	Screen.canvasCtx.drawImage(

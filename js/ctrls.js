@@ -30,7 +30,7 @@ export const Ctrls = {
 		// add listeners for keyboard input
 		window.addEventListener('keyup',function(event) {Ctrls.onKeyUp(event); }, false);
 		window.addEventListener('keydown',function(event) {Ctrls.onKeyDown(event); }, false);
-		window.addEventListener('blur',function(){Ctrls.init();},false);
+		//window.addEventListener('blur',function(){Ctrls.init();},false);
 		
 		// add listeners for mouse input
 		window.addEventListener('mousemove', 
@@ -44,18 +44,18 @@ export const Ctrls = {
 			false);
 			
 		// add event listeners for touch input
-		window.addEventListener('touchstart',
-			function(event) { 
-				event.buttons = 1;
-				Ctrls.mouseBtn(event);
-			}, false);
-		window.addEventListener('touchmove',
-			function(event) {
-				//console.log(event);
-				event.clientX = event.touches[0].screenX;
-				event.clientY = event.touches[0].screenY;
-				Ctrls.onMouseMove(event);
-			}, false);
+		//window.addEventListener('touchstart',
+		//	function(event) { 
+		//		event.buttons = 1;
+		//		Ctrls.mouseBtn(event);
+		//	}, false);
+		//window.addEventListener('touchmove',
+		//	function(event) {
+		//		//console.log(event);
+		//		event.clientX = event.touches[0].screenX;
+		//		event.clientY = event.touches[0].screenY;
+		//		Ctrls.onMouseMove(event);
+		//	}, false);
 	},
 	
 	isDown: function(keyCode) {
