@@ -46,6 +46,7 @@ export const Ctrls = {
 		// add event listeners for touch input
 		window.addEventListener('touchstart',
 			function(event) { 
+				event.preventDefault();
 				event.buttons = 1;
 				event.clientX = event.touches[0].clientX;
 				event.clientY = event.touches[0].clientY;
@@ -54,11 +55,13 @@ export const Ctrls = {
 			}, false);
 		window.addEventListener('touchend',
 			function(event) {
+				event.preventDefault();
 				event.buttons = 0;
 				Ctrls.onMouseBtn(event);
 			}, false);
 		window.addEventListener('touchmove',
 			function(event) {
+				event.preventDefault();
 				event.clientX = event.touches[0].clientX;
 				event.clientY = event.touches[0].clientY;
 				Ctrls.onMouseMove(event);
