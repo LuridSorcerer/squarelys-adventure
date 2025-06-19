@@ -3,8 +3,8 @@ export const Physics = {
 	// moveObject(): Move an object based on its current speed. Pass in
 	// the object to be moved and the time delta in milliseconds. 
 	moveObject: function (obj,delta) {
-		obj.x += obj.speed.x * delta / 1000;
-		obj.y += obj.speed.y * delta / 1000;
+		obj.x += obj.speed.x * (delta / 1000);
+		obj.y += obj.speed.y * (delta / 1000);
 	},
 	
 	// boxCollision(): Check if two objects have overlapping rectangles

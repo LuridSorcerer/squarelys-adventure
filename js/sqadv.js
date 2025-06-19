@@ -21,7 +21,7 @@ const Squarely = {
 	w: 16,
 	color: {r:64,g:64,b:64},
 	COLORCHANGE:  {r:5, g:0, b:0 },
-	speed: {x:0, y:0 },
+	speed: {x:0, y:0, max:100},
 	keys: 0,
 };
 
@@ -89,9 +89,17 @@ function update() {
 	
 	// move Squarely toward the target if it's active
 	if (Target.active) {
-		Squarely.speed.x = Target.x - Squarely.x;
-		Squarely.speed.y = Target.y - Squarely.y;
-		Vector2d.normalize(Squarely.speed);
+		// get vector from Squarely to target
+		let v = { x: Target.x - Squarely.x, y: Target.y - Squarely.y };
+		// get normalized vector
+		v = Vector2d.normalize(v);
+		// set Squarely's speed to the normalized vector
+		Squarely.speed.x = v.x;
+		Squarely.speed.y = v.y
+		// multiply his speed up to his maximum
+		Squarely.speed.x *= Squarely.speed.max;
+		Squarely.speed.y *= Squarely.speed.max;
+		// if Squarely reached the target, disable the target
 		if (Physics.boxCollision(Squarely,Target)) { Target.active = false; }
 	}
 	
@@ -246,6 +254,8 @@ function render() {
 	else { Screen.bufferCtx.fillStyle = "darkgray"; }
 	Screen.drawObject( Target );
 	Screen.bufferCtx.fillText("Target:"+Target.x+","+Target.y, 10, 80);
+	Screen.bufferCtx.fillText("Speed:"+Squarely.speed.x+","+Squarely.speed.y,10,100);
+	Screen.bufferCtx.fillText("Max speed:"+Squarely.speed.max,10,120);
 
 	// draw the offscreen canvas to the onscreen one
 	Screen.canvasCtx.drawImage(
