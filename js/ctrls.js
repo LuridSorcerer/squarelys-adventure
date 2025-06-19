@@ -44,18 +44,22 @@ export const Ctrls = {
 			false);
 			
 		// add event listeners for touch input
-		//window.addEventListener('touchstart',
-		//	function(event) { 
-		//		event.buttons = 1;
-		//		Ctrls.mouseBtn(event);
-		//	}, false);
-		//window.addEventListener('touchmove',
-		//	function(event) {
-		//		//console.log(event);
-		//		event.clientX = event.touches[0].screenX;
-		//		event.clientY = event.touches[0].screenY;
-		//		Ctrls.onMouseMove(event);
-		//	}, false);
+		window.addEventListener('touchstart',
+			function(event) { 
+				event.buttons = 1;
+				Ctrls.onMouseBtn(event);
+			}, false);
+		window.addEventListener('touchend',
+			function(event) {
+				event.buttons = 0;
+				Ctrls.onMouseBtn(event);
+			}, false);
+		window.addEventListener('touchmove',
+			function(event) {
+				event.clientX = event.touches[0].clientX;
+				event.clientY = event.touches[0].clientY;
+				Ctrls.onMouseMove(event);
+			}, false);
 	},
 	
 	isDown: function(keyCode) {
